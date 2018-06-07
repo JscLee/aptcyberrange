@@ -1,0 +1,102 @@
+---
+#
+# install elasticsearch
+#
+- name: stop packetbeat
+  service:
+    name: packetbeat
+    state: stopped
+- name: stop metricbeat
+  service:
+    name: metricbeat
+    state: stopped
+- name: stop filebeat
+  service:
+    name: filebeat
+    state: stopped
+- name: install curl
+  apt:
+    name: curl
+    state: present
+- name: install apt-transport-https
+  apt:
+    name: apt-transport-https
+    state: present
+- name: add elastic gpg key
+  apt_key:
+    url: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    state: present
+- name: add elastic repository
+  apt_repository:
+    repo: deb https://artifacts.elastic.co/packages/5.x/apt stable main
+    state: present
+- name: update apt cache
+  apt:
+    update_cache: yes
+- name: install elasticsearch
+  apt:
+    name: elasticsearch
+    state: present
+- name: enable and start elasticsearch
+  service:
+    name: elasticsearch
+    enabled: yes
+    state: started
+- name: download wazuh elasticsearch template
+  raw: wget https://raw.githubusercontent.com/wazuh/wazuh-kibana-app/master/server/startup/integration_files/template_file.json
+- name: load wazuh elasticsearch template
+  shell: "curl -XPUT 'http://localhost:9200/_template/wazuh' -H 'Content-Type: application/json' -d @template_file.json"
+  register: result
+  until: result.stdout.find("acknowledged") != -1
+  retries: 5
+  delay: 10
+- name: load packetbeat elasticsearch template
+  shell: "curl -XPUT 'http://localhost:9200/_template/packetbeat' -H 'Content-Type: application/json' -d@/etc/packetbeat/packetbeat.template.json"
+  register: result
+  until: result.stdout.find("acknowledged") != -1
+  retries: 5
+  delay: 10
+- name: delete old packetbeat documents from setup
+  shell: "curl -XDELETE 'http://localhost:9200/packetbeat-*'"
+- name: load metricbeat elasticsearch template
+  shell: "curl -H 'Content-Type: application/json' -XPUT 'http://localhost:9200/_template/metricbeat' -d@/etc/metricbeat/metricbeat.template.json"
+  register: result
+  until: result.stdout.find("acknowledged") != -1
+  retries: 5
+  delay: 10
+- name: delete old metricbeat documents from setup
+  shell: "curl -XDELETE 'http://localhost:9200/metricbeat-*'"
+- name: enable memory locking
+  template:
+    src: elasticsearch.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+    owner: root
+    group: root
+    mode: 0644
+- name: create systemd directory
+  raw: mkdir -p /etc/systemd/system/elasticsearch.service.d/
+- name: set systemd memory limit to infinity
+  template:
+    src: elasticsearch.conf.j2
+    dest: /etc/systemd/system/elasticsearch.service.d/elasticsearch.conf
+    owner: root
+    group: root
+    mode: 0644
+- name: set sysv memory limit to infinity
+  template:
+    src: elasticsearch.j2
+    dest: /etc/default/elasticsearch
+    owner: root
+    group: root
+    mode: 0644
+- name: limit memory to 4gb
+  template:
+    src: jvm.options.j2
+    dest: /etc/elasticsearch/jvm.options
+    owner: root
+    group: root
+    mode: 0644
+- name: restart elasticsearch
+  service:
+    name: elasticsearch
+    state: restarted

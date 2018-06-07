@@ -1,9 +1,5 @@
 # Threat Instrumentation And Machine Automation Tool
 
-## Last updated
-
-June 4th 2018
-
 ## Table of contents
 
 1. [Installation](https://github.com/cmu-apt/aptcyberrange#1-installation-)   

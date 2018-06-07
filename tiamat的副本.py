@@ -62,8 +62,7 @@ class Tiamat(App):
             'show deployment list': ShowServers,
             'add server': AddServers,
             'remove server': RemoveServers,
-            'show available': ShowAvailableServers,
-            'automate a test': Auto_demo # Auto_demo
+            'show available': ShowAvailableServers
         }
         for k, v in commands.iteritems():
             self.command_manager.add_command(k, v)
@@ -235,7 +234,6 @@ class Tiamat(App):
 
         try:
             if os_platform != "Windows":
-                print("executing: 'sudo chmod 0600 key'") # Auto_demo
                 subprocess.check_call("sudo chmod 0600 key", shell=True)
         except subprocess.CalledProcessError as e:
             print e
@@ -480,147 +478,6 @@ class Ansible(Command):
             subprocess.check_call(ssh_call, shell=True)
         except subprocess.CalledProcessError as err:
             print err
-
-class Auto_demo(Command):
-    """Run the series of ansible-playbook in concatenation"""
-    log = logging.getLogger(__name__)
-
-    def take_action(self, parsed_args):
-        print "this is just a demo of the automation thing"
-        print "now try to connect to ansible:"
-        # this section is copied from Ansible class
-        self.log.debug('debugging')
-        global state
-        if "ansible" not in state.ip.keys():
-            self.app.stdout.write("Error: Ansible IP unavailable.\n")
-            return
-        ssh_call = "ssh -i key ubuntu@" + state.ip["ansible"]
-
-        child = pexpect.spawn(ssh_call)
-        flag = child.expect(['yes/no', 'ubuntu@ansible:'])
-        if flag == 0:
-            print "answering yes"
-            child.sendline('yes')
-            child.expect('ubuntu@')
-        elif flag == 1:
-            print "get in directly"
-        else:
-            child.interact()
-
-        print "now logged onto ansible"
-        print "now try ansible-playbook: tcpdump_on.yml"
-        child.sendline('ansible-playbook inject/tcpdump_on.yml')
-        child.expect('PLAY RECAP')
-        print "now try ansible-playbook: phishing.yml"
-        child.sendline('ansible-playbook inject/phishing.yml')
-        child.expect('PLAY RECAP')
-        print "now try to ssh onto blackhat server"
-        child.sendline('ssh -i key ubuntu@blackhat.fazio.com')
-        flag = child.expect(['yes/no', 'ubuntu@blackhat:'])
-        if flag == 0:
-            print "answering yes"
-            child.sendline('yes')
-            child.expect('ubuntu@')
-        elif flag == 1:
-            print "get in directly"
-        else:
-            child.interact()
-
-
-        print "now logged onto blackhat"
-        child.sendline('ls')
-        # index = p.expect(['good', 'bad', pexpect.EOF, pexpect.TIMEOUT])
-        flag = child.expect(['shadow', pexpect.EOF])
-        if flag == 0:
-            print "the file 'shadow' exists here"
-        elif flag == 1:
-            print "oops, something went wrong, 'shadow' is not here"
-
-        print "log out of blackhat"
-        # log out of blackhat
-        child.sendline('logout')
-        child.expect('ubuntu@ansible') # could check whether it's really ansible or not
-        print "run ansible-playbook: cracking.yml"
-        child.sendline('ansible-playbook inject/cracking.yml')
-        child.expect('PLAY RECAP')
-        # should ssh into black to check whether cracking is successful, assume success here
-        print "run ansible-playbook: firmware.yml"
-        child.sendline('ansible-playbook inject/firmware.yml')
-        child.expect('PLAY RECAP') # changed
-        #print "child.before is", child.before
-        #print "child.after is", child.after
-        # child.interact()
-        print "now try to ssh onto sales server"
-        child.sendline('ssh -i key ubuntu@sales.fazio.com')
-        flag = child.expect(['yes/no', 'ubuntu@sales:']) # changed
-
-        #print "2nd time"
-        #print "fla is", flag # changed
-        #print "child.before is", child.before
-        #print "child.after is", child.after
-
-
-        if flag == 0:
-            print "answering yes"
-            child.sendline('yes')
-            child.expect('ubuntu@')
-        elif flag == 1:
-            print "get in directly ubuntu@sales:"
-        else:
-            child.interact()
-
-        print "now logged onto sales"
-        child.sendline('logout')
-        print "now logged off sales and return to ansible server"
-        child.expect('ubuntu@ansible')
-        print "run ansible-playbook: transactions.yml"
-        child.sendline('ansible-playbook inject/transactions.yml')
-        child.expect('PLAY RECAP')
-        print "now try to ssh onto ftp server"
-        child.sendline('ssh -i key ubuntu@ftp.fazio.com')
-        flag = child.expect(['yes/no', 'ubuntu@ftp:'])
-        if flag == 0:
-            print "answering yes"
-            child.sendline('yes')
-            child.expect('ubuntu@ftp:')
-        elif flag == 1:
-            print "get in directly"
-        else:
-            child.interact()
-        # child.expect('ubuntu@ftp')
-        print "now logged onto ftp"
-        print "cd into /var/ftp/upload/"
-        child.sendline('cd /var/ftp/upload/')
-        #child.expect('ubuntu@ftp:/var/ftp/upload')
-        child.expect('ubuntu@') # changed
-
-        print "check whether the transactions.txt exists"
-        child.sendline('ls')
-        #child.expect('ubuntu@ftp:/var/ftp/upload')
-        # child.expect('transactions.txt')
-        # print "1st time", child.before
-        if child.expect(['transactions.txt', pexpect.TIMEOUT]) == 0:
-            print "transactions.txt exists"
-        else:
-            print "it doesn't exist"
-
-        #print "child.before is", child.before
-        #print "child.after is", child.after
-        # child.interact()
-        #print "2nd time", child.before
-        #print "the content of transactions.txt:"
-        #print "3rd time", child.before
-        
-        child.sendline('logout')
-        print "log out of ftp server"
-        child.expect('ubuntu@ansible')
-
-        # log out of ansible
-        child.sendline('logout')
-        print "log out of ansible, attack complete"
-        child.close()
-
-
 
 class ElkFiles(Command):
     """Copy log files from ELK server to local folder"""
