@@ -4,10 +4,10 @@
 #
 - name: install kibana - takes awhile
   apt:
-    name: kibana
+    name: kibana=5.6.5
     state: present
 - name: install wazuh app plugin - takes awhile
-  raw: /usr/share/kibana/bin/kibana-plugin install https://packages.wazuh.com/wazuhapp/wazuhapp.zip
+  raw: /usr/share/kibana/bin/kibana-plugin install https://packages.wazuh.com/wazuhapp/wazuhapp-2.1.1_5.6.5.zip
 - name: install nginx
   apt:
     name: nginx

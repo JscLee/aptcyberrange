@@ -43,9 +43,13 @@
     enabled: yes
     state: started
 - name: download wazuh elasticsearch template
-  raw: wget https://raw.githubusercontent.com/wazuh/wazuh-kibana-app/master/server/startup/integration_files/template_file.json
-- name: load wazuh elasticsearch template
-  shell: "curl -XPUT 'http://localhost:9200/_template/wazuh' -H 'Content-Type: application/json' -d @template_file.json"
+  shell: "curl https://raw.githubusercontent.com/wazuh/wazuh/3.2/extensions/elasticsearch/wazuh-elastic6-template-alerts.json | curl -XPUT 'http://localhost:9200/_template/wazuh' -H 'Content-Type: application/json' -d @-"
+  register: result
+  until: result.stdout.find("acknowledged") != -1
+  retries: 5
+  delay: 10
+- name: download wazuh elasticsearch template
+  shell: "curl https://raw.githubusercontent.com/wazuh/wazuh/3.2/extensions/elasticsearch/wazuh-elastic6-template-monitoring.json | curl -XPUT 'http://localhost:9200/_template/wazuh-agent' -H 'Content-Type: application/json' -d @-"
   register: result
   until: result.stdout.find("acknowledged") != -1
   retries: 5
