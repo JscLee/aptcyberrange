@@ -1,11 +1,11 @@
-*.tf
+/*.tf
 *.tfstate
 *.tfstate.backup
 *.DS_Store
-overrides/*.tf
 saved_logs/*
 saved_pcaps/*
 *.zip
 terraform
 packer
 global_state.json
+rootkey.csv
