@@ -2,6 +2,7 @@ import sys
 import time
 import datetime
 import random
+import os
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 
@@ -10,7 +11,7 @@ from watchdog.events import PatternMatchingEventHandler
 PROB = 0.5
 
 class MyHandler(PatternMatchingEventHandler):
-    patterns=["*.desc"]
+    patterns=["*.contractor"]
 
     def process(self, event):
         """
@@ -25,8 +26,11 @@ class MyHandler(PatternMatchingEventHandler):
         log_file = open("watchdogOutput.txt", 'a')
         log_file.write(str(datetime.datetime.now()) + " " + str(event.event_type) + '\n')
         if (random.random() < PROB):
-            log_file.write("phishing email detected\n")
+            log_file.write("phishing email detected in " + str(event.src_path) + '\n')
+            os.remove(event.src_path);
+            log_file.write("phishing email deleted\n")
         log_file.close()
+
 
     # for testing purpose only, only need to detect newly found files
     #def on_modified(self, event):
@@ -39,7 +43,7 @@ class MyHandler(PatternMatchingEventHandler):
 if __name__ == '__main__':
     args = sys.argv[1:]
     observer = Observer()
-    observer.schedule(MyHandler(), path=args[0] if args else '.', recursive=True)
+    observer.schedule(MyHandler(), path=args[0] if args else './mail/new', recursive=True)
     observer.start()
 
     try:
