@@ -146,7 +146,11 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 						//java.lang.Runtime rt = java.lang.Runtime.getRuntime();
 						// java.lang.Process p = rt.exec("python testPython.py");
 						System.out.println("!!ssh");
-						ConnectionSSH.connect("ubuntu", "34.205.39.152", "python test.py");
+						boolean connSuccess = ConnectionSSH.connect("ubuntu", "54.152.242.236", "python test.py");
+						if (!connSuccess) {
+							System.out.println("session connection timeout, wrong IP address?");
+							return 0;
+						}
 						// TODO: need to handle the "answering yes" condition
 						// TODO: need to handle more failure conditions
 						//int waitForRet = p.waitFor();
@@ -157,6 +161,11 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 				}
 			}
 		}
-		return visit(ctx.strategyBranch());
+		if (ctx.DONE() == null) {
+			System.out.println("visitTacticRef: visiting strategyBranch");
+			return visit(ctx.strategyBranch());
+		}
+		return 1; // return 1 when strategyBranch is DONE
+		
 	}
 }

@@ -10,20 +10,30 @@ import com.jcraft.jsch.Session;
 
 public class ConnectionSSH {
 
-    public static void connect(String username, String host, String command) throws JSchException, IOException {
-        JSch jsch = new JSch();
-        String pubKeyPath = "key";
-        jsch.addIdentity(pubKeyPath);
+    public static boolean connect(String username, String host, String command) throws JSchException, IOException {
+        // Timeout limt reference website: 
+        // https://stackoverflow.com/questions/35009009/jsch-session-timeout-limit
+        try {
+            JSch jsch = new JSch();
+            String pubKeyPath = "key";
+            jsch.addIdentity(pubKeyPath);
 
-        Session session = jsch.getSession(username, host, 22);
-        session.setConfig("StrictHostKeyChecking", "no");
-        session.connect();
-        ChannelExec channel = (ChannelExec)session.openChannel("exec");
-        channel.setCommand(command);
+            Session session = jsch.getSession(username, host, 22);
+            session.setConfig("StrictHostKeyChecking", "no");
+            // set the timeout (ms) here
+            int timeout = 2000;
+            session.connect(timeout);
+            ChannelExec channel = (ChannelExec)session.openChannel("exec");
+            channel.setCommand(command);
 
-        channel.connect();
+            channel.connect();
 
-        channel.disconnect();
-        session.disconnect();
+            channel.disconnect();
+            session.disconnect();
+        } catch (JSchException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }
