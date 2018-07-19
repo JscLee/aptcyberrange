@@ -1,4 +1,6 @@
-// A is attacker, W is web server
+module attacker.tactics;
+import model "Model" {Blackhat as B, Web as W}
+
 tactic phishingEmail() {
     condition {
         exists lb : server in W.servers | !lb.credential;
@@ -6,7 +8,7 @@ tactic phishingEmail() {
     action {
         set lbs = {select l : server in W.servers | !l.credential};
         for (server l : lbs) {
-            A.sendPhishingEmail(l);
+            B.sendPhishingEmail(l);
         }
     }
     effect {

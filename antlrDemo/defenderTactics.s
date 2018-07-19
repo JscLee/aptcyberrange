@@ -1,3 +1,6 @@
+module defender.tactics;
+import model "Model" {Mail as M}
+
 tactic filterEmail() {
     condition {
         exists lb : M.mail in M.newMail | lb.isPhishingEmail;
@@ -16,9 +19,7 @@ tactic filterEmail() {
  
 tactic rebootServer() {
     condition {
-        // M.time > M.threshold;
         exists lb : D.ZNewsLBT in M.components | lb.time > M.threshold;
-        // within timewindow or true
     }
     action {
         T.reboot(M);
