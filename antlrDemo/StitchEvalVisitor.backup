@@ -1,8 +1,6 @@
 import java.util.*;
 
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +51,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			System.out.println("(IDENTIFIER) id is "+id);
 			// CASE 1: variable found in model
 			if (model.machine.containsKey(id)) {
-				System.out.println("variable \'"+id+"\' found in model");
+				System.out.println("variable found in model");
 				return model.machine.get(id);
 			}
 			// CASE 2: variable defined earlier
@@ -61,7 +59,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			if (ret == -1) {
 				throw new RuntimeException("identifier not defined");
 			} else {
-				System.out.println("variable defined earlier, returning "+ret);
+				System.out.println("returning "+ret);
 				return ret;
 			}
 			// TODO: CASE 3: variable refers to a probe in System Under Test
@@ -77,7 +75,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 		int expVal = visit(ctx.expression());
 		if (expVal == 1) { // only process the strategy when true
 			for (int i = 0; i < ctx.strategyNode().size(); i++) { // traverse the list
-				System.out.println("visitStrategy: traverse list, statement "+i);
+				System.out.println("visitStrategy: traverse list");
 				visit(ctx.strategyNode(i));
 			}
 			return 1;
@@ -124,11 +122,12 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			// whenever a condition in the list is found false, return 0 (false), if all true, return 1 (true)
 			for (int i = 0; i < ctx.expression().size(); i++) {
 				int result = visit(ctx.expression(i));
-				System.out.println("visitStrategyCond: list["+i+"]: "+ result);
+				System.out.println("list["+i+"]: "+ result);
 				if (result == 0) {
 					return 0;
 				}
 			}
+			System.out.println("returning "+ret);
 			return ret;
 		}
 		return 0;
@@ -136,7 +135,6 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 
 	/*
 	 * Only consider "filterEmail"
-	 * Now also consider earlier scanned tactics
 	 */
 	@Override
 	public Integer visitTacticRef(StitchParser.TacticRefContext ctx) {
@@ -163,14 +161,6 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} else { // the new case where "lookup and run" is used
-					System.out.println("visitTacticRef: lookup and run tactic "+id);
-					if (model.tactics.containsKey(id)) {
-						System.out.println("found tactic! id: "+id);
-						int success = execTactic(id);
-					} else {
-						System.out.println("tactic not found! id: "+id);
-					}
 				}
 			}
 		}
@@ -184,73 +174,12 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	}
 
 	/*
-	 * Execute the selected tactic
+	 * Only consider "filterEmail"
 	 */
-	private Integer execTactic(String name) {
-		StitchParser.TacticContext ctx = model.tactics.get(name);
+	@Override
+	public Integer visitTactic(StitchParser.TacticContext ctx) {
 		String tacticName = ctx.IDENTIFIER().getText();
-		System.out.println("execTactic: tacticName is "+tacticName);
-		if (visit(ctx.condition()) == 1) { // only continue when the condition is met
-			System.out.println("execTactic: condition is true");
-			visit(ctx.action());
-		} else {
-			System.out.println("execTactic: condition not met");
-		}
-		try {
-			Thread.sleep(1000);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return 1;
-	}
-
-	/*
-	 * Examine the condition(s) of a tactic
-	 */
-	@Override // TODO: need to implement visitQuantifiedExpression for complex conditions
-	public Integer visitCondition(StitchParser.ConditionContext ctx) {
-		for (int i = 0; i < ctx.expression().size(); i++) {
-			int res = visit(ctx.expression(i));
-			if (res == 0) {
-				return 0;
-			}
-		}
-		return 1;
-	}
-
-	/*
-	 * execute the action part of a tactic
-	 */
-	@Override
-	public Integer visitAction(StitchParser.ActionContext ctx) {
-		for (int i = 0; i < ctx.statement().size(); i++) {
-			System.out.println("visitAction: visiting statement("+i+")");
-			visit(ctx.statement(i));
-		}
-		return 1;
-	}
-
-	/*
-	 * execute the special type of statement: methodCall
-	 */
-	@Override
-	public Integer visitMethodCall(StitchParser.MethodCallContext ctx) {
-		String id = ctx.IDENTIFIER().getText();
-		System.out.println("visitMethodCall: id is "+id);
-		// TODO: the method is hard coded, it should be from a list in the model
-		if (id.equals("tacOneAction")) { // TODO: not considering argument
-			try {
-				System.out.println("!!ssh");
-				boolean connSuccess = ConnectionSSH.connect("ubuntu", "34.200.226.46", "python tacOneAction.py");
-				if (!connSuccess) {
-					System.out.println("session connection timeout, wrong IP address?");
-					return 0;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		System.out.println("visitTactic: tacticName is "+tacticName);
 		return 1;
 	}
 }
