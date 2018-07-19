@@ -6,24 +6,42 @@ import org.antlr.v4.runtime.tree.*;
 public class Stitch {
 
     public static void main(String[] args) throws Exception {
-        // InputStream is = args.length > 0 ? new FileInputStream(args[0]) : System.in;
-        InputStream is = new FileInputStream(args[0]);
+        if (args.length != 2) {
+            System.out.println("usage: java Stitch <inputTactic> <inputStrategy>");
+            return;
+        }
+        InputStream inputTactic = new FileInputStream(args[0]);
+        InputStream inputStrategy = new FileInputStream(args[1]);
 
-        // ANTLRInputStream input = new ANTLRInputStream(is);
         // change of API: https://stackoverflow.com/questions/18110180/processing-a-string-with-antlr4
-        StitchLexer lexer = new StitchLexer(CharStreams.fromStream(is));
-        //lexer.setInputStream(CharStreams.fromStream(is));
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        StitchParser parser = new StitchParser(tokens);
-        // parser.setInputStream(tokens);
-        ParseTree tree = parser.script();
+        StitchLexer tacticLexer = new StitchLexer(CharStreams.fromStream(inputTactic));
+        StitchLexer strategyLexer = new StitchLexer(CharStreams.fromStream(inputStrategy));
+        CommonTokenStream tacticTokens = new CommonTokenStream(tacticLexer);
+        CommonTokenStream strategyTokens = new CommonTokenStream(strategyLexer);
+        StitchParser tacticParser = new StitchParser(tacticTokens);
+        StitchParser strategyParser = new StitchParser(strategyTokens);
 
-        Model model = new Model();
+        ParseTree tacticTree = tacticParser.script();
+        ParseTree strategyTree = strategyParser.script();
 
-        StitchEvalVisitor eval = new StitchEvalVisitor(model);
-        // Start traversing the tree (AST)
-        eval.visit(tree);
+        Model model = new Model(); // make it a hashtable of type of models
+        // new visitor to resolve type of model
 
-        // System.out.println(tree.toStringTree(parser));
+        TacticScanner tacScan = new TacticScanner(model);
+
+        tacScan.visit(tacticTree);
+
+        StitchEvalVisitor eval = new StitchEvalVisitor(model, tacticTree);
+
+        // Start traversing the tree (AST) repeatedly
+        //while(true) {
+            // TODO: add a probe, rpc or remote access
+            eval.visit(strategyTree); // TODO: needs to pick ONE not ALL strategies
+        //    try {
+        //        Thread.sleep(1000);
+        //    } catch (Exception e) {
+        //        e.printStackTrace();
+        //    }
+        //}
     }
 }
