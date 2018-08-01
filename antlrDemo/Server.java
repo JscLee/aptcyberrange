@@ -26,7 +26,7 @@ public class Server extends UnicastRemoteObject implements RmiServer {
 		try {
 			srv = new Server();
 		} catch (RemoteException e) {
-			System.err.println("fail to create the server ");
+			System.err.println("fail to create the RMI server");
 			e.printStackTrace();
 		}
 		

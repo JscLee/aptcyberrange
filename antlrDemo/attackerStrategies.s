@@ -1,5 +1,5 @@
 module attacker.strategies;
-import lib "attackerTactics.s" 
+import lib "attackerTactics.s";
 define boolean hasCredential = testVariable;
 
 strategy PhishingStrategy [true] {

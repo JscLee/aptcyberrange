@@ -1,5 +1,5 @@
 module defender.tactics;
-import model "Model" {Mail as M}
+import model "Model" {Mail as M};
 
 tactic filterEmail() {
     condition {

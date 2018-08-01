@@ -1,5 +1,5 @@
 module defender.strategies;
-import lib "defenderTactics.s"
+import lib "defenderTactics.s";
 define boolean isPhishing = testVariable;
 
 strategy FilterStrategy [true] {
