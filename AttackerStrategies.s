@@ -1,10 +1,15 @@
 module dos.strategies;
 import model "Model.java" {Model.java as M};
 import lib "attackTactics.s";
-define boolean validWebCredential = false;
-define boolean hasLogFile = false;
-define boolean hasCardCredential = false;
-define boolean validCardPassword = false;
+// A is attacker server (blackhat)
+define boolean validWebCredential = exists c : A.Server in M.components | (c.validWeb == true);
+define boolean hasLogFile = exists c : A.Server in M.components | (c.hasLog == true);
+define boolean hasCardCredential = exists c : A.Server in M.components | (c.hasCard == true);
+define boolean validCardPassword = exists c : A.Server in M.components | (c.validCard == true);
+//define boolean validWebCredential = false;
+//define boolean hasLogFile = false;
+//define boolean hasCardCredential = false;
+//define boolean validCardPassword = false;
 
 // If no web credential and log file exist, send a phishing email.
 // format is a little bit similar to EliminateStrategy in dosStrategies.s
