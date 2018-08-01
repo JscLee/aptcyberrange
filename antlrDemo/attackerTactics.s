@@ -1,5 +1,5 @@
 module attacker.tactics;
-import model "Model" {Blackhat as B, Web as W};
+import model "TargetModel" {Blackhat as B, Web as W};
 
 tactic phishingEmail() {
     condition {

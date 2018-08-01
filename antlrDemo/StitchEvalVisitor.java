@@ -12,11 +12,11 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	Map<String, Integer> memory = new HashMap<String, Integer>();
 
 	Model model;
-	ParseTree tacticTree;
+	// ParseTree tacticTree;
 
-	StitchEvalVisitor(Model m, ParseTree tacticTreeInput) {
+	StitchEvalVisitor(Model m) {
 		model = m;
-		tacticTree = tacticTreeInput;
+		// tacticTree = tacticTreeInput;
 	}
 
 	/*
@@ -52,9 +52,9 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			String id = ctx.IDENTIFIER().getText();
 			System.out.println("(IDENTIFIER) id is "+id);
 			// CASE 1: variable found in model
-			if (model.machine.containsKey(id)) {
+			if (model.getMachine().containsKey(id)) {
 				System.out.println("variable \'"+id+"\' found in model");
-				return model.machine.get(id);
+				return Integer.parseInt(model.getMachine().get(id));
 			}
 			// CASE 2: variable defined earlier
 			int ret = memory.getOrDefault(id, -1);
@@ -165,7 +165,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 					}
 				} else { // the new case where "lookup and run" is used
 					System.out.println("visitTacticRef: lookup and run tactic "+id);
-					if (model.tactics.containsKey(id)) {
+					if (model.getTactics().containsKey(id)) {
 						System.out.println("found tactic! id: "+id);
 						int success = execTactic(id);
 					} else {
@@ -187,7 +187,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	 * Execute the selected tactic
 	 */
 	private Integer execTactic(String name) {
-		StitchParser.TacticContext ctx = model.tactics.get(name);
+		StitchParser.TacticContext ctx = model.getTactics().get(name);
 		String tacticName = ctx.IDENTIFIER().getText();
 		System.out.println("execTactic: tacticName is "+tacticName);
 		if (visit(ctx.condition()) == 1) { // only continue when the condition is met

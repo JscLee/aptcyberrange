@@ -13,11 +13,26 @@ public class TacticScanner extends StitchBaseVisitor<Integer> {
 
 	//Map<String, Integer> memory = new HashMap<String, Integer>();
 
+	ModelManager manager;
 	Model model;
+	Map<String, String> tmpMap;
 
-	TacticScanner(Model m) {
-		model = m;
+	TacticScanner(ModelManager m, Map<String, String> serverIP) {
+		manager = m;
+		tmpMap = serverIP;
 	}
+
+	/*
+	 * Instantiate the model, populate ModelManager
+	 */
+	@Override
+	public Integer visitImportSt(StitchParser.ImportStContext ctx) {
+		String modelName = ctx.STRING_LIT().getText();
+		System.out.println("visitImportSt: modelName: "+modelName);
+		model = new TargetModel(tmpMap); // TODO: test only
+		return 1;
+	}
+
 
 	/*
 	 * For testing purpose only
