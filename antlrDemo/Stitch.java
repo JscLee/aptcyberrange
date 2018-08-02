@@ -49,6 +49,7 @@ public class Stitch {
             serverIP.put(key, ips.getString(key));
         }
 
+        // for testing purpose only
         for (Map.Entry<String, String> entry : serverIP.entrySet()) {
             System.out.println("server: "+entry.getKey()+", ip:"+entry.getValue());
         }
@@ -64,7 +65,9 @@ public class Stitch {
 
         Model model = manager.spawnModel();
 
-        StitchEvalVisitor eval = new StitchEvalVisitor(model);
+        System.out.println("Stitch: Start evaluating strategyTree");
+
+        StitchEvalVisitor eval = new StitchEvalVisitor(model,args[0]);
 
         // Start traversing the tree (AST) repeatedly
         //while(true) {

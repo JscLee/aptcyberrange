@@ -27,9 +27,15 @@ public class TacticScanner extends StitchBaseVisitor<Integer> {
 	 */
 	@Override
 	public Integer visitImportSt(StitchParser.ImportStContext ctx) {
+		if (ctx.LIB() != null || ctx.OP() != null || ctx.MODEL() == null) {
+			System.err.println("visitImportSt: Only support import model in tactics.");
+			return 0;
+		}
 		String modelName = ctx.STRING_LIT().getText();
-		System.out.println("visitImportSt: modelName: "+modelName);
-		model = new TargetModel(tmpMap); // TODO: test only
+		String cleanModelName = modelName.substring(1, modelName.length()-1);
+		System.out.println("visitImportSt: cleanModelName: "+cleanModelName);
+		manager.initModel(cleanModelName, tmpMap);
+		model = manager.spawnModel();
 		return 1;
 	}
 

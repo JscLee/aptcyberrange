@@ -12,11 +12,34 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	Map<String, Integer> memory = new HashMap<String, Integer>();
 
 	Model model;
+	String tacticFileName;
 	// ParseTree tacticTree;
 
-	StitchEvalVisitor(Model m) {
+	StitchEvalVisitor(Model m, String inputTactic) {
 		model = m;
-		// tacticTree = tacticTreeInput;
+		tacticFileName = inputTactic;
+	}
+
+	/*
+	 * Only checks that the imported library <tactic_file> specified in the strategy is the same as
+	 * the filename specified in the main function
+	 */
+	@Override
+	public Integer visitImportSt(StitchParser.ImportStContext ctx) {
+		// System.out.println("input Tactic is: "+tacticFileName);
+		if (ctx.LIB() == null || ctx.OP() != null || ctx.MODEL() != null) {
+			System.err.println("visitImportSt: Only support import lib in strategies.");
+			return 0;
+		}
+		String libName = ctx.STRING_LIT().getText();
+		String cleanLibName = libName.substring(1, libName.length()-1);
+		// System.out.println("specified Tactic is: "+cleanLibName);
+		if (cleanLibName.equals(tacticFileName)) {
+			System.out.println("EvalVisitor: visitImportSt: verified tactic library");
+			return 1;
+		}
+		System.err.println("EvalVisitor: visitImportSt: tacticFile mismatch!");
+		return 0;
 	}
 
 	/*
@@ -32,8 +55,9 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	}
 
 	/*
-	 * Only handles boolean values
-	 * 1 is true; 0 is false
+	 * Handles boolean values: 1 is true; 0 is false
+	 * 
+	 * Handles system hooks' returns
 	 */
 	@Override
 	public Integer visitIdExpression(StitchParser.IdExpressionContext ctx) {
@@ -51,10 +75,10 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 		if(ctx.IDENTIFIER() != null) {
 			String id = ctx.IDENTIFIER().getText();
 			System.out.println("(IDENTIFIER) id is "+id);
-			// CASE 1: variable found in model
-			if (model.getMachine().containsKey(id)) {
-				System.out.println("variable \'"+id+"\' found in model");
-				return Integer.parseInt(model.getMachine().get(id));
+			// CASE 1: variable found in model.checkHooks(), a probe in System Under Test
+			if (model.checkHooks().contains(id)) {
+				System.out.println("variable \'"+id+"\' found in model.checkHooks()");
+				return model.execHook(id);
 			}
 			// CASE 2: variable defined earlier
 			int ret = memory.getOrDefault(id, -1);
@@ -64,7 +88,6 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 				System.out.println("variable defined earlier, returning "+ret);
 				return ret;
 			}
-			// TODO: CASE 3: variable refers to a probe in System Under Test
 		}
 		return visitChildren(ctx);
 	}
@@ -148,8 +171,6 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 					System.out.println("visitTacticRef: filterEmail invoked");
 					// https://blog.art-of-coding.eu/executing-operating-system-commands-from-java/
 					try {
-						//java.lang.Runtime rt = java.lang.Runtime.getRuntime();
-						// java.lang.Process p = rt.exec("python testPython.py");
 						System.out.println("!!ssh");
 						boolean connSuccess = ConnectionSSH.connect("ubuntu", "34.200.226.46", "python test.py");
 						if (!connSuccess) {
@@ -158,8 +179,6 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 						}
 						// TODO: need to handle the "answering yes" condition
 						// TODO: need to handle more failure conditions
-						//int waitForRet = p.waitFor();
-						//int exitValRet = p.exitValue();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

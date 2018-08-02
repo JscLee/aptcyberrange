@@ -29,4 +29,9 @@ public class Probe {
 	public boolean checkFile(String path) throws RemoteException {
 		return srv.checkFile(path);
 	}
+
+	public Integer hasCredential() {
+		// empty function for compilition sake
+		return 1;
+	}
 }
