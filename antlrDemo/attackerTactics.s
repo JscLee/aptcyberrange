@@ -1,5 +1,8 @@
 module dos.strategies;
-import model "Model.java" {Model.java as M};
+
+import model "TargetModel";
+// import model "TargetModel" {Model.java as M};
+
 //import model "ZNewsSys:Acme" { ZNewsSys as M, ZNewsFam as T, ZNewsDosFam as D} ;
 // A is attacker, W is web server
 tactic phishingEmail() {
