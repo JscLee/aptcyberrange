@@ -34,4 +34,30 @@ public class Probe {
 		// empty function for compilition sake
 		return 1;
 	}
+	
+	// defender uses this to decide whether filterEmail should be used
+    	public boolean checkSuspicious() {
+        	if (Math.random() < 0.3) return true;
+        	else false;
+    	}
+    
+    	// webThreshold should be included in model, can be set as system's current time + 20000 when initialized
+    	public boolean checkWebTimeExpired() {
+//        if (System.currentTimeMillis() > webThreshold) {
+//            webThreshold += 20000;
+//            return true;
+//        } else {
+//            return false;
+//        }
+    	}
+    
+    	// paymentThreshold should be included in model, can be set as system's current time + 40000 when initialized
+    	public boolean checkPaymentTimeExpired() {
+//        if (System.currentTimeMillis() > paymentThreshold) {
+//            paymentThreshold += 40000;
+//            return true;
+//        } else {
+//            return false;
+//        }
+    	}
 }

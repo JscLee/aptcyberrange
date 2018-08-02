@@ -1,5 +1,6 @@
 module dos.strategies;
-import model "Model.java" {Model.java as M};
+
+import model "TargetModel";
 
 // C is mail server (contractor), D is defender, W is web server, P is payment server
 tactic filterEmail() {

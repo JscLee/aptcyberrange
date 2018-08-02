@@ -16,7 +16,10 @@ public class TargetModel implements Model {
 		tactics = new HashMap<>();
 		hooks = new HashSet<>();
 		hooks.add("hasCredential");
-		probe = new Probe(machine.get("ansible"), 15213); // magic number for port, hardcode ansible server
+		System.out.println("Creating probe...");
+		// probe = new Probe(machine.get("ansible"), 15213); // magic number for port, hardcode ansible server
+		probe = new Probe("128.237.200.11", 15213); // testing only
+		System.out.println("probe created");
 	}
 
 	@Override

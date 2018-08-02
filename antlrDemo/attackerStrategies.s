@@ -1,6 +1,7 @@
 module dos.strategies;
-import model "Model.java" {Model.java as M};
+
 import lib "attackTactics.s";
+
 // A is attacker server (blackhat)
 define boolean validWebCredential = exists c : A.Server in M.components | (c.validWeb == true);
 define boolean hasLogFile = exists c : A.Server in M.components | (c.hasLog == true);
