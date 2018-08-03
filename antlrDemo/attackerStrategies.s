@@ -1,6 +1,6 @@
 module dos.strategies;
 
-import lib "attackTactics.s";
+import lib "attackerTactics.s";
 
 // A is attacker server (blackhat)
 define boolean validWebCredential = exists c : A.Server in M.components | (c.validWeb == true);

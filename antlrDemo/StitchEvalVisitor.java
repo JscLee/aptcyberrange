@@ -38,7 +38,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			System.out.println("EvalVisitor: visitImportSt: verified tactic library");
 			return 1;
 		}
-		System.err.println("EvalVisitor: visitImportSt: tacticFile mismatch!");
+		System.err.println("EvalVisitor: visitImportSt: tacticFile mismatch: " + cleanLibName + ", " + tacticFileName);
 		return 0;
 	}
 
