@@ -10,6 +10,7 @@ public class TargetModel implements Model {
 	Map<String, StitchParser.TacticContext> tactics;
 	HashSet<String> hooks;
 	Probe probe;
+	// TODO: implement a cache/memory of remote variables, updated by probes on each call
 
 	TargetModel (Map<String,String> serverIP) {
 		machine = serverIP;
@@ -17,8 +18,9 @@ public class TargetModel implements Model {
 		hooks = new HashSet<>();
 		hooks.add("hasCredential");
 		System.out.println("Creating probe...");
-		// probe = new Probe(machine.get("ansible"), 15213); // magic number for port, hardcode ansible server
-		probe = new Probe("128.237.200.11", 15213); // testing only
+		probe = new Probe(machine.get("ansible"), 15213); // magic number for port, hardcode ansible server
+		// probe = new Probe("128.237.200.112", 15213); // testing only
+		// probe = new Probe("18.204.18.19", 1099); // testing only
 		System.out.println("probe created");
 	}
 
@@ -55,7 +57,8 @@ public class TargetModel implements Model {
 	public Integer execHook(String id) {
 		if (id.equals("hasCredential")) {
 			System.out.println("execHook: hasCrendential");
-			return probe.hasCredential(); // TODO: API from Probe class
+			Integer retVal = probe.hasCredential(); // TODO: API from Probe class
+			// model
 		}
 		System.err.println("execHook: name of hook cannot be found");
 		return -1;
