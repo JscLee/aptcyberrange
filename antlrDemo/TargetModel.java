@@ -104,8 +104,55 @@ public class TargetModel implements Model {
 	 */
 	@Override
 	public Integer execOperations(String id) {
-		if (id.equals("increaseThreshold")) {
-			
+		if (id.equals("increaseWebThreshold")) {
+			int webThreshold = timeThresholds.get("webThreshold");
+			webThreshold += 2000;
+			timeThresholds.put("webThreshold", webThreshold);
+		} 
+		if (id.equals("D.block")) {
+
+		} 
+		if (id.equals("W.resetPassword")) {
+
+		} 
+		if (id.equals("A.send")) {
+
+		} 
+		if (id.equals("A.sendPhishingEmail")) {
+
+		} 
+		if (id.equals("A.downloadLogFile")) {
+
+		} 
+		if (id.equals("A.decodeLogFile")) {
+
+		} 
+		if (id.equals("A.loginWeb")) {
+
+		} 
+		if (id.equals("A.injectShell")) {
+
+		} 
+		if (id.equals("A.crackPasswd")) {
+
+		} 
+		if (id.equals("A.storePasswd")) {
+
+		} 
+		if (id.equals("A.firmware")) {
+
+		} 
+		if (id.equals("A.transaction")) {
+
+		}
+		if (id.equals("A.deleteLogFile")) {
+
+		}
+		if (id.equals("A.deleteWebCredential")) {
+
+		}
+		if (id.equals("F.deleteLogFile")) {
+
 		}
 	}
 }
