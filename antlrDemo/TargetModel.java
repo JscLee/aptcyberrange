@@ -66,19 +66,15 @@ public class TargetModel implements Model {
 	public Integer execHook(String id) {
 		if (id.equals("hasCard")) {
 			System.out.println("execHook: hasCard"); // has card credential
-			Integer retVal = probe.hasCredential(); // TODO: API from Probe class
+			Integer retVal = probe.hasCardCredential(); // TODO: API from Probe class
 			// model
 		} else if (id.equals("hasLog")) {
 			System.out.println("execHook: hasLogFile"); // has log file
-			Integer retVal = probe.checkFile(); // TODO: API from Probe class
+			Integer retVal = probe.hasLogFile(); // TODO: API from Probe class
 			// add return
-		} else if (id.equals("validWeb")) {
+		} else if (id.equals("hasWeb")) {
 			System.out.println("execHook: validWeb"); // has valid web server password
-			Integer retVal = probe.checkWebPasswd(); // TODO: API from Probe class
-			// add return
-		} else if (id.equals("validCard")) {
-			System.out.println("execHook: validCard"); // has valid payment server password
-			Integer retVal = probe.checkPaymentPasswd(); // TODO: API from Probe class
+			Integer retVal = probe.hasWebCredential(); // TODO: API from Probe class
 			// add return
 		} else if (id.equals("suspicious")) {
 			System.out.println("execHook: suspicious"); // has suspicious mail
@@ -90,9 +86,6 @@ public class TargetModel implements Model {
 		} else if (id.equals("WEB_THRESHOLD")) {
 			System.out.println("execHook: webThreshold"); // show web server's threshold
 			return timeThresholds.get("webThreshold");
-		} else if (id.equals("PAYMENT_THRESHOLD")) {
-			System.out.println("execHook: paymentThreshold"); // show payment server's threshold
-			return timeThresholds.get("paymentThreshold");
 		}
 		System.err.println("execHook: name of hook cannot be found");
 		return -1;
