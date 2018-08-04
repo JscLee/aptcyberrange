@@ -79,7 +79,6 @@ tactic deleteFiles() {
         for (server l : lbs) {
             A.deleteFiles(l.logFile); // delete blackhat's log file
             A.deleteFiles(l.webCredential); // delete blackhat's decoded log file(web credential)
-            A.deleteFiles(l.cardCredential); // delete blackhat's card credential files
             F.deleteFiles(l.logFile); // delete ftp server's log file
         }
     }
