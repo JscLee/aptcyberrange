@@ -12,17 +12,13 @@ public class AnsibleProbe extends Probe {
 	public Integer checkFile(String path) throws RemoteException {
 		return srv.checkFile(path);
 	}
-
-	public Integer hasCredential() {
-		// empty function for compilition sake
-		return 1;
-	}
 	
-	// TODO: maybe use Integer return type is easier
 	// defender uses this to decide whether filterEmail should be used
-	public boolean checkSuspicious() {
-    	if (Math.random() < 0.3) return true;
-    	else return false;
+	public Integer checkSuspicious() {
+    	if (Math.random() < 0.3) {
+    		return 1;
+    	}
+    	return 0;
 	}
 
 	// webThreshold should be included in model, can be set as system's current time + 20000 when initialized

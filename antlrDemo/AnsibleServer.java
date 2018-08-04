@@ -21,8 +21,8 @@ public class AnsibleServer extends Server {
 		probe.put("sales", new SalesProbe("10.0.0.21", 15214));
 	}
 
-	public Probe getProbe() {
-		return probe;
+	public Map<String, Probe> getProbe() {
+		return new HashMap<String, Probe>(probe);
 	}
 
 }

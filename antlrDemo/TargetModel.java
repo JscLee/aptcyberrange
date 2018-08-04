@@ -71,24 +71,27 @@ public class TargetModel implements Model {
 			Integer retVal = otherProbe.get("Blackhat").checkFile("~/passwd") && 
 							 otherProbe.get("Blackhat").checkFile("~/shadow"); 
 			return retVal; 
-		} else if (id.equals("hasLog")) {
+		} 
+		else if (id.equals("hasLog")) {
 			System.out.println("execHook: hasLogFile"); // has log file
 			Integer retVal = otherProbe.get("Ftp").checkFile("/upload/logs.txt");  
 			return retVal; 
-		} else if (id.equals("hasWeb")) {
+		} 
+		else if (id.equals("hasWeb")) {
 			System.out.println("execHook: hasWeb"); // has web credential
 			Integer retVal = otherProbe.get("Blackhat").checkFile("~/logs_decoded.txt"); 
 			return retVal; 
-		} else if (id.equals("suspicious")) {
+		} 
+		else if (id.equals("suspicious")) {
 			System.out.println("execHook: suspicious"); // has suspicious mail
-			if (Math.random() < 0.3) {
-				return 1;
-			}
-			return 0;
-		} else if (id.equals("c.time")) {
+			Integer retVal = ansibleProbe.checkSuspicious();
+			return retVal;
+		} 
+		else if (id.equals("c.time")) {
 			System.out.println("execHook: currentTime"); // show current time
 			return System.currentTimeMillis();
-		} else if (id.equals("WEB_THRESHOLD")) {
+		} 
+		else if (id.equals("WEB_THRESHOLD")) {
 			System.out.println("execHook: webThreshold"); // show web server's threshold
 			return timeThresholds.get("webThreshold");
 		}
