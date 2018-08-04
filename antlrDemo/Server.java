@@ -8,6 +8,7 @@ import java.io.*;
 
 public class Server extends UnicastRemoteObject implements RmiServer {
 	
+	private static String ip;
 	private static int port;
 
 	public Server() throws RemoteException {
@@ -17,7 +18,8 @@ public class Server extends UnicastRemoteObject implements RmiServer {
 	public static void main(String[] args) {
 
 		try {
-			port = Integer.parseInt(args[0]); 
+			ip = args[0];
+			port = Integer.parseInt(args[1]); 
 		} catch(NumberFormatException e) {
 			e.printStackTrace();
 		}
@@ -31,6 +33,7 @@ public class Server extends UnicastRemoteObject implements RmiServer {
 		}
 		
 		try {
+			System.setProperty("java.rmi.server.hostname", ip);
 			LocateRegistry.createRegistry(port);
 			Naming.rebind(String.format("//127.0.0.1:%d/ServerService", port), srv);
 		} catch (RemoteException e) {
@@ -42,10 +45,15 @@ public class Server extends UnicastRemoteObject implements RmiServer {
 	}
 
 	@Override
-	public boolean checkFile(String path) {
+	public boolean checkFile(String path) throws RemoteException {
 		File file = new File(path);
 		return file.exists();
 	}
+
+	@Override
+	public boolean checkLogin() throws RemoteException {
+		return false;
+	} 
 
 }
 

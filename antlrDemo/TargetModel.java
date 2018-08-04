@@ -6,22 +6,24 @@ import org.antlr.v4.runtime.tree.*;
 
 public class TargetModel implements Model {
 	
-	Map<String, String> machine; // TODO: should change to private
-	Map<String, StitchParser.TacticContext> tactics;
-	HashSet<String> hooks;
-	Probe probe;
+	private Map<String, String> machine; // TODO: should change to private
+	private Map<String, StitchParser.TacticContext> tactics;
+	private HashSet<String> hooks;
+	private Probe ansibleProbe;
+	private Map<String, probe> otherProbe;
 	// TODO: implement a cache/memory of remote variables, updated by probes on each call
 
-	TargetModel (Map<String,String> serverIP) {
+	public TargetModel (Map<String,String> serverIP) {
 		machine = serverIP;
 		tactics = new HashMap<>();
 		hooks = new HashSet<>();
 		hooks.add("hasCredential");
 		System.out.println("Creating probe...");
-		probe = new Probe(machine.get("ansible"), 15213); // magic number for port, hardcode ansible server
+		ansibleProbe = new AnsibleProbe(machine.get("ansible"), 15213); // magic number for port, hardcode ansible server
 		// probe = new Probe("128.237.200.112", 15213); // testing only
 		// probe = new Probe("18.204.18.19", 1099); // testing only
 		System.out.println("probe created");
+		otherProbe = ansibleProbe.getProbe();
 	}
 
 	@Override
