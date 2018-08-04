@@ -6,7 +6,7 @@ public class FtpProbe extends Probe {
 		super(srvIP, srvPort);
 	}
 
-	public boolean checkFile(String path) throws RemoteException {
+	public Integer checkFile(String path) throws RemoteException {
 		return srv.checkFile(path);
 	}
 	

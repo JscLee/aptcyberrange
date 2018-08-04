@@ -20,7 +20,7 @@ public class Server extends UnicastRemoteObject implements RmiServer {
 		try {
 			ip = args[0];
 			port = Integer.parseInt(args[1]); 
-		} catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
 
