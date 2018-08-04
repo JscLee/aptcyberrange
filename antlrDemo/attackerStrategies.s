@@ -43,9 +43,12 @@ strategy ShellInjectionStrategy
 [hasWebCredential && !hasCardCredential] {
     t0: (!hasCardCredential) -> shellInjection() @[5000] {
         t1: (hasCardCredential) -> done;
-        t1a: (default) -> TNULL;
+        t1a: (default) -> deleteFiles() @[5000] {
+            t2a: (success) -> done;
+            t2b: (default) -> TNULL;
+        }
     }
-    t2: (default) -> TNULL;
+    t3: (default) -> TNULL;
 }
 
 // If already has credit card's credentials but does not have the decrypted password,
