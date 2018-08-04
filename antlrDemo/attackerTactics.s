@@ -42,7 +42,7 @@ tactic shellInjection() {
     action {
         set lbs = {select l : server in A.servers | l.webCredential};
         for (server l : lbs) {
-            A.login(l.webCredential);
+            A.loginWeb(l.webCredential);
             A.inject(l.script); // l.script is the php script to be injected
         }
     }
@@ -77,9 +77,9 @@ tactic deleteFiles() {
     action {
         set lbs = {select l : server in A.servers | l.webCredential};
         for (server l : lbs) {
-            A.deleteFiles(l.logFile); // delete blackhat's log file
-            A.deleteFiles(l.webCredential); // delete blackhat's decoded log file(web credential)
-            F.deleteFiles(l.logFile); // delete ftp server's log file
+            A.deleteLogFile(l); // delete blackhat's log file
+            A.deleteWebCredential(l); // delete blackhat's decoded log file(web credential)
+            F.deleteLogFile(l); // delete ftp server's log file
         }
     }
     effect {
