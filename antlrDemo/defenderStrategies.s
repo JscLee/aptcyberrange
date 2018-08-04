@@ -4,7 +4,7 @@ import lib "DefenderTactics.s";
 // C is system under test (contractor), W is web server, P is payment server
 define boolean hasSuspiciousEmail = exists c : C.Server in M.components | (c.suspicious == true);
 define boolean webPasswdExpired = exists c : W.Server in M.components | (c.time > M.WEB_THRESHOLD);
-define boolean paymentPasswdExpired = exists c : W.Server in P.components | (c.time > P.PAYMENT_THRESHOLD);
+define boolean paymentPasswdExpired = exists c : W.Server in M.components | (c.time > P.PAYMENT_THRESHOLD);
 //define boolean hasSuspiciousEmail = false;
 //define boolean webPasswdExpired = false;
 //define boolean paymentPasswdExpired = false;
