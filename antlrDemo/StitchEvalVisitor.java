@@ -167,6 +167,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			for (int i = 0; i < ctx.IDENTIFIER().size(); i++) {
 				String id = ctx.IDENTIFIER().get(i).getText();
 				System.out.println("visitTacticRef: id is "+id);
+				// This is only for testing purpose now, lookup and run should handle everything
 				if (id.equals("filterEmail")) {
 					System.out.println("visitTacticRef: filterEmail invoked");
 					// https://blog.art-of-coding.eu/executing-operating-system-commands-from-java/
@@ -258,6 +259,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 		String id = ctx.IDENTIFIER().getText();
 		System.out.println("visitMethodCall: id is "+id);
 		// TODO: the method is hard coded, it should be from a list in the model
+		// return model.executeOperation(id); // Integer
 		if (id.equals("tacOneAction")) { // TODO: not considering argument
 			try {
 				System.out.println("!!ssh");

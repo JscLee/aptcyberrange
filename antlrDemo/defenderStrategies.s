@@ -1,7 +1,6 @@
 module dos.strategies;
-
+import model "Model.java" {Model.java as M};
 import lib "DefenderTactics.s";
-
 // C is system under test (contractor), W is web server, P is payment server
 define boolean hasSuspiciousEmail = exists c : C.Server in M.components | (c.suspicious == true);
 define boolean webPasswdExpired = exists c : W.Server in M.components | (c.time > M.WEB_THRESHOLD);
@@ -31,13 +30,13 @@ strategy ChangeWebPasswordStrategy
 }
 
 // If payment server's password is expired (has not change in a long time), modify it.
-strategy ChangePaymentPasswordStrategy
-[paymentPasswdExpired] {
-    t0: (paymentPasswdExpired) -> changePaymentPassword() @[5000] {
-        t1: (!paymentPasswdExpired) -> done;
-        t1a: (default) -> TNULL;
-    }
-    t2: (default) -> TNULL;
-}
+// strategy ChangePaymentPasswordStrategy
+// [paymentPasswdExpired] {
+//    t0: (paymentPasswdExpired) -> changePaymentPassword() @[5000] {
+//        t1: (!paymentPasswdExpired) -> done;
+//        t1a: (default) -> TNULL;
+//    }
+//    t2: (default) -> TNULL;
+//}
 
 

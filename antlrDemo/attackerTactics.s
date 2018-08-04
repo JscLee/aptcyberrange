@@ -1,8 +1,5 @@
 module dos.strategies;
-
-import model "TargetModel";
-// import model "TargetModel" {Model.java as M};
-
+import model "Model.java" {Model.java as M};
 //import model "ZNewsSys:Acme" { ZNewsSys as M, ZNewsFam as T, ZNewsDosFam as D} ;
 // A is attacker, W is web server
 tactic phishingEmail() {
@@ -24,7 +21,6 @@ tactic phishingEmail() {
 tactic crackWebCredential() {
     condition {
         exists lb : server in F.servers | lb.logFile;
-        exists lc : server in A.servers | !lc.webCredential;
     }
     action {
         set lbs = {select l : server in F.servers | l.logFile};
@@ -34,7 +30,7 @@ tactic crackWebCredential() {
         }
     }
     effect {
-        forall lc : server in A.servers | lc.webCredential;
+        true;
     }
 }
 
@@ -42,7 +38,6 @@ tactic crackWebCredential() {
 tactic shellInjection() {
     condition {
         exists lb : server in A.servers | lb.webCredential; // credential for web server
-        exists lc : server in A.servers | !lc.cardCredential && !lc.cardPassword; // no credential and password for payment server
     }
     action {
         set lbs = {select l : server in A.servers | l.webCredential};
@@ -58,34 +53,38 @@ tactic shellInjection() {
 
 tactic crackCardPassword() {
     condition {
-        exists lb : server in A.servers | lb.cardCredential && !lb.cardPassword; // credential for payment server
+        exists lb : server in A.servers | lb.cardCredential; // credential for payment server
         
     }
     action {
-        set lbs = {select l : server in A.servers | l.cardCredential && !l.cardPassword};
+        set lbs = {select l : server in A.servers | l.cardCredential};
         for (server l : lbs) {
             A.crackPasswd(l.cardCredential); // unshadow and crack the password
             A.storePasswd(l.cardPassword); // store the cracked password
+            A.firmware(l.cardCredential); // execute firmware
+            A.tracsaction(l.cardCredential); // execute transactions
         }
     }
     effect {
-        forall lb : server in A.servers | lb.cardCredential && lb.cardPassword;
+        true;
     }
 }
 
-tactic pirateCard() {
+tactic deleteFiles() {
     condition {
-        exists lb : server in A.servers | lb.cardCredential && lb.cardPassword && !lb.gotMoney; // credential for payment server
+        true;
     }
     action {
-        set lbs = {select l : server in A.servers | l.cardCredential && l.cardPassword && !l.gotMoney};
+        set lbs = {select l : server in A.servers | l.webCredential};
         for (server l : lbs) {
-            A.firmware(l.cardCredential, l.cardPassword); // execute firmware
-            A.tracsaction(l.cardCredential, l.cardPassword); // execute transactions
+            A.deleteFiles(l.logFile); // delete blackhat's log file
+            A.deleteFiles(l.webCredential); // delete blackhat's decoded log file(web credential)
+            F.deleteFiles(l.logFile); // delete ftp server's log file
         }
     }
     effect {
-        forall lb : server in A.servers | lb.cardCredential && lb.cardPassword && lb.gotMoney;
+        true;
     }
 }
+
 

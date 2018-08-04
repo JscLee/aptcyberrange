@@ -1,6 +1,5 @@
 module dos.strategies;
-
-import model "TargetModel";
+import model "Model.java" {Model.java as M};
 
 // C is mail server (contractor), D is defender, W is web server, P is payment server
 tactic filterEmail() {
@@ -43,8 +42,9 @@ tactic changeWebPassword() {
     action {
         set lbs = {select l : W.server in W.components | l.time > W.threshold};
         for (W.server l : lbs) {
-            W.resetPassword("passwd_of_web_apt_18_summer");
+            W.resetPassword(l);
         }
+        increaseThreshold(W.threshold); // update web server's threshold by adding 20 seconds
     }
     effect {
         true;
@@ -52,21 +52,22 @@ tactic changeWebPassword() {
 }
 
 
-tactic changePaymentPassword() {
-    condition {
-        // P.time > P.threshold;
-        exists lb : P.server in P.components | lb.time > P.threshold;
-        // within timewindow or true
-    }
-    action {
-        set lbs = {select l : P.server in W.components | l.time > P.threshold};
-        for (P.server l : lbs) {
-            P.resetPassword("passwd_of_payment_apt_18_summer");
-        }
-    }
-    effect {
-        true;
-    }
-}
+//tactic changePaymentPassword() {
+//    condition {
+//        // P.time > P.threshold;
+//        exists lb : P.server in P.components | lb.time > P.threshold;
+//        // within timewindow or true
+//    }
+//    action {
+//        set lbs = {select l : P.server in W.components | l.time > P.threshold};
+//        for (P.server l : lbs) {
+//            P.resetPassword("passwd_of_payment_apt_18_summer");
+//        }
+//        increaseThreshold(P.threshold); // update payment server's threshold by adding 40 seconds
+//    }
+//    effect {
+//        true;
+//    }
+//}
 
 

@@ -3,10 +3,9 @@ module dos.strategies;
 import lib "attackerTactics.s";
 
 // A is attacker server (blackhat)
-define boolean validWebCredential = exists c : A.Server in M.components | (c.validWeb == true);
+define boolean hasWebCredential = exists c : A.Server in M.components | (c.hasWeb == true);
 define boolean hasLogFile = exists c : A.Server in M.components | (c.hasLog == true);
 define boolean hasCardCredential = exists c : A.Server in M.components | (c.hasCard == true);
-define boolean validCardPassword = exists c : A.Server in M.components | (c.validCard == true);
 //define boolean validWebCredential = false;
 //define boolean hasLogFile = false;
 //define boolean hasCardCredential = false;
@@ -15,7 +14,7 @@ define boolean validCardPassword = exists c : A.Server in M.components | (c.vali
 // If no web credential and log file exist, send a phishing email.
 // format is a little bit similar to EliminateStrategy in dosStrategies.s
 strategy PhishingEmailStrategy
-[!validWebCredential && !hasLogFile] {
+[!hasWebCredential && !hasLogFile] {
     t0: (!hasLogFile) -> phishingEmail() @[5000] {
         t1: (hasLogFile) -> done;
         t1a: (!hasLogFile) -> phishingEmail() @[10000] {
@@ -29,7 +28,7 @@ strategy PhishingEmailStrategy
 // If attacker does not have web credential but has log file, crack the log
 // file to get password.
 strategy WebCredentialStrategy
-[!validWebCredential && hasLogFile] {
+[!hasWebCredential && hasLogFile] {
     t0: (!validWebCredential) -> crackWebCredential() @[5000] {
         t1: (default) -> TNULL;
         t1a: (validWebCredential) -> done;
@@ -41,29 +40,22 @@ strategy WebCredentialStrategy
 // implement shell injection to web server and query credentials from LDAP using
 // the shell on web server.
 strategy ShellInjectionStrategy
-[validWebCredential && (!hasCardCredential || !validCardPassword)] {
-    t0: (!hasCardCredential || !validCardPassword) -> shellInjection() @[5000] {
+[hasWebCredential && !hasCardCredential] {
+    t0: (!hasCardCredential) -> shellInjection() @[5000] {
         t1: (hasCardCredential) -> done;
-        t1a: (default) -> TNULL;
+        t1a: (default) -> deleteFiles() @[5000] {
+            t2a: (success) -> done;
+            t2b: (default) -> TNULL;
+        }
     }
-    t2: (default) -> TNULL;
+    t3: (default) -> TNULL;
 }
 
 // If already has credit card's credentials but does not have the decrypted password,
 // crack the password from LDAP.
 strategy CrackPasswordStrategy
-[hasCardCredential && !validCardPassword] {
-    t0: (!validCardPassword) -> crackCardPassword() @[5000] {
-        t1: (validCardPassword) -> done;
-        t1a: (default) -> TNULL;
-    }
-    t2: (default) -> TNULL;
-}
-
-// If already has credit card's credentials and password, get money in it!
-strategy GetMoneyStrategy
-[hasCardCredential && validCardPassword] {
-    t0: (validCardPassword) -> pirateCard() @[8000] {
+[hasCardCredential] {
+    t0: (hasCardCredential) -> crackCardPassword() @[5000] {
         t1: (success) -> done;
         t1a: (default) -> TNULL;
     }
