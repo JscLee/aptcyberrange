@@ -6,21 +6,13 @@ import org.antlr.v4.runtime.tree.*;
 
 public class TargetModel implements Model {
 	
-<<<<<<< HEAD
-	private Map<String, String> machine; // TODO: should change to private
+	private Map<String, String> machine;
 	private Map<String, StitchParser.TacticContext> tactics;
 	private HashSet<String> hooks;
 	private Probe ansibleProbe;
-	private Map<String, probe> otherProbe;
-=======
-	Map<String, String> machine; // TODO: should change to private
-	Map<String, StitchParser.TacticContext> tactics;
-	HashSet<String> hooks;
-	Probe probe;
-	Map<String, Integer> timeThresholds;
-	// long webThreshold;
-	// long paymentThreshold;
->>>>>>> b5d345753eaa156c895926a839197cec8ced253f
+	private Map<String, Probe> otherProbe;
+	private Map<String, Integer> timeThresholds;
+
 	// TODO: implement a cache/memory of remote variables, updated by probes on each call
 
 	public TargetModel (Map<String,String> serverIP) {
@@ -33,16 +25,14 @@ public class TargetModel implements Model {
 		// probe = new Probe("128.237.200.112", 15213); // testing only
 		// probe = new Probe("18.204.18.19", 1099); // testing only
 		System.out.println("probe created");
-<<<<<<< HEAD
 		otherProbe = ansibleProbe.getProbe();
-=======
+
 		int webThreshold = System.currentTimeMillis() + 20000;
 		timeThresholds.put("webThreshold", webThreshold);
 		int paymentThreshold = System.currentTimeMillis() + 40000;
 		timeThresholds.put("paymentThreshold", paymentThreshold);
 		System.out.println("webThreshold: " + webThreshold);
 		System.out.println("paymentThreshold: " + paymentThreshold);
->>>>>>> b5d345753eaa156c895926a839197cec8ced253f
 	}
 
 	@Override
@@ -68,7 +58,7 @@ public class TargetModel implements Model {
 
 	@Override
 	public String getName() {
-		return "TargetModel";
+		return new String("TargetModel");
 	}
 
 	/*
@@ -78,20 +68,23 @@ public class TargetModel implements Model {
 	public Integer execHook(String id) {
 		if (id.equals("hasCard")) {
 			System.out.println("execHook: hasCard"); // has card credential
-			Integer retVal = probe.hasCardCredential(); // TODO: API from Probe class
-			// model
+			Integer retVal = otherProbe.get("Blackhat").checkFile("~/passwd") && 
+							 otherProbe.get("Blackhat").checkFile("~/shadow"); 
+			return retVal; 
 		} else if (id.equals("hasLog")) {
 			System.out.println("execHook: hasLogFile"); // has log file
-			Integer retVal = probe.hasLogFile(); // TODO: API from Probe class
-			// add return
+			Integer retVal = otherProbe.get("Ftp").checkFile("/upload/logs.txt");  
+			return retVal; 
 		} else if (id.equals("hasWeb")) {
-			System.out.println("execHook: validWeb"); // has valid web server password
-			Integer retVal = probe.hasWebCredential(); // TODO: API from Probe class
-			// add return
+			System.out.println("execHook: hasWeb"); // has web credential
+			Integer retVal = otherProbe.get("Blackhat").checkFile("~/logs_decoded.txt"); 
+			return retVal; 
 		} else if (id.equals("suspicious")) {
 			System.out.println("execHook: suspicious"); // has suspicious mail
-			Integer retVal = probe.checkSuspicious(); // TODO: API from Probe class
-			// add return
+			if (Math.random() < 0.3) {
+				return 1;
+			}
+			return 0;
 		} else if (id.equals("c.time")) {
 			System.out.println("execHook: currentTime"); // show current time
 			return System.currentTimeMillis();

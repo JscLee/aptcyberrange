@@ -45,14 +45,17 @@ public class Server extends UnicastRemoteObject implements RmiServer {
 	}
 
 	@Override
-	public boolean checkFile(String path) throws RemoteException {
+	public Integer checkFile(String path) throws RemoteException {
 		File file = new File(path);
-		return file.exists();
+		if (file.exists()) {
+			return 1;
+		}
+		return 0;
 	}
 
 	@Override
-	public boolean checkLogin() throws RemoteException {
-		return false;
+	public Integer checkLogin() throws RemoteException {
+		return 0;
 	} 
 
 }

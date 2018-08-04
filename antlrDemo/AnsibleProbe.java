@@ -4,13 +4,13 @@ public class AnsibleProbe extends Probe {
 	public AnsibleProbe(String srvIP, int srvPort) {
 		super(srvIP, srvPort);
 	}
-	
-	public boolean checkFile(String path) throws RemoteException {
-		return srv.checkFile(path);
-	}
 
 	public Map<String, Probe> getProbe() {
 		return srv.getProbe();
+	}
+	
+	public Integer checkFile(String path) throws RemoteException {
+		return srv.checkFile(path);
 	}
 
 	public Integer hasCredential() {
