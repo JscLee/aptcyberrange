@@ -55,8 +55,8 @@ strategy ShellInjectionStrategy
 // crack the password from LDAP.
 strategy CrackPasswordStrategy
 [hasCardCredential] {
-    t0: (!validCardPassword) -> crackCardPassword() @[5000] {
-        t1: (validCardPassword) -> done;
+    t0: (hasCardCredential) -> crackCardPassword() @[5000] {
+        t1: (success) -> done;
         t1a: (default) -> TNULL;
     }
     t2: (default) -> TNULL;
