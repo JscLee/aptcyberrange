@@ -1,33 +1,26 @@
 module dos.strategies;
 import model "Model.java" {Model.java as M};
-//import model "ZNewsSys:Acme" { ZNewsSys as M, ZNewsFam as T, ZNewsDosFam as D} ;
-// A is attacker, W is web server
+
 tactic phishingEmail() {
     condition {
-        exists lb : server in W.servers | !lb.logFile;
+        true;
     }
     action {
-        set lbs = {select l : server in W.servers | !l.logFile};
-        for (server l : lbs) {
-            A.sendPhishingEmail(l);
-        }
+        sendPhishingEmail(l);
     }
     effect {
-        forall lb : server in W.servers | lb.logFile;
+        hasLogFile;
     }
 }
 
-// F is FTP server
+// A.*() means operations on the 'attacker' server, i.e. the "blackhat" server
 tactic crackWebCredential() {
     condition {
-        exists lb : server in F.servers | lb.logFile;
+        true;
     }
     action {
-        set lbs = {select l : server in F.servers | l.logFile};
-        for (server l : lbs) {
-            A.downloadLogFile(l);
-            A.decodeLogFile(l);
-        }
+        A.downloadLogFile(l);
+        A.decodeLogFile(l);
     }
     effect {
         true;
@@ -37,50 +30,41 @@ tactic crackWebCredential() {
 // A is attacker, W is web server, P is payment server
 tactic shellInjection() {
     condition {
-        exists lb : server in A.servers | lb.webCredential; // credential for web server
+        true;
     }
     action {
-        set lbs = {select l : server in A.servers | l.webCredential};
-        for (server l : lbs) {
-            A.loginWeb(l.webCredential);
-            A.inject(l.script); // l.script is the php script to be injected
-        }
+        A.loginWeb(l.webCredential);
+        A.injectShell(l.script); // l.script is the php script to be injected
     }
     effect {
-        forall lc : server in A.servers | lc.cardCredential;
+        hasCardCredential;
     }
 }
 
 tactic crackCardPassword() {
     condition {
-        exists lb : server in A.servers | lb.cardCredential; // credential for payment server
-        
+        true;
     }
     action {
-        set lbs = {select l : server in A.servers | l.cardCredential};
-        for (server l : lbs) {
-            A.crackPasswd(l.cardCredential); // unshadow and crack the password
-            A.storePasswd(l.cardPassword); // store the cracked password
-            A.firmware(l.cardCredential); // execute firmware
-            A.tracsaction(l.cardCredential); // execute transactions
-        }
+        A.crackPasswd(l.cardCredential); // unshadow and crack the password
+        A.storePasswd(l.cardPassword); // store the cracked password
+        A.firmware(l.cardCredential); // execute firmware
+        A.tracsaction(l.cardCredential); // execute transactions
     }
     effect {
         true;
     }
 }
 
+// F.*() means operations on the 'ftp' server
 tactic deleteFiles() {
     condition {
         true;
     }
     action {
-        set lbs = {select l : server in A.servers | l.webCredential};
-        for (server l : lbs) {
-            A.deleteLogFile(l); // delete blackhat's log file
-            A.deleteWebCredential(l); // delete blackhat's decoded log file(web credential)
-            F.deleteLogFile(l); // delete ftp server's log file
-        }
+        A.deleteLogFile(l); // delete blackhat's log file
+        A.deleteWebCredential(l); // delete blackhat's decoded log file(web credential)
+        F.deleteLogFile(l); // delete ftp server's log file
     }
     effect {
         true;
