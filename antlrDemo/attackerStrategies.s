@@ -7,13 +7,13 @@ import lib "attackerTactics.s";
 strategy PhishingEmailStrategy
 [!hasWebCredential && !hasLogFile] {
     t0: (!hasLogFile) -> phishingEmail() @[5000] {
-        t1: (success) -> done;
-        t1a: (default) -> phishingEmail() @[10000] {
-            t2a: (default) -> TNULL;
-            t2b: (success) -> done;
+        t1: (hasLogFile) -> done;
+        t1a: (!hasLogFile) -> phishingEmail() @[10000] {
+            t2a: (!hasLogFile) -> TNULL;
+            t2b: (hasLogFile) -> done;
         }
     }
-    t3: (default) -> TNULL;
+    t3: (hasLogFile) -> TNULL;
 }
 
 // If attacker does not have web credential but has log file, crack the log
@@ -21,10 +21,10 @@ strategy PhishingEmailStrategy
 strategy WebCredentialStrategy
 [!hasWebCredential && hasLogFile] {
     t0: (!hasWebCredential) -> crackWebCredential() @[5000] {
-        t1: (default) -> TNULL;
-        t1a: (success) -> done;
+        t1: (!hasWebCredential) -> TNULL;
+        t1a: (hasWebCredential) -> done;
     }
-    t2: (default) -> TNULL;
+    t2: (hasWebCredential) -> TNULL;
 }
 
 // If already has web credential but does not have credit card's credentials,
@@ -33,24 +33,22 @@ strategy WebCredentialStrategy
 strategy ShellInjectionStrategy
 [hasWebCredential && !hasCardCredential] {
     t0: (!hasCardCredential) -> shellInjection() @[5000] {
-        t1: (success) -> done;
-        t1a: (default) -> deleteFiles() @[5000] {
-            t2a: (success) -> done;
-            t2b: (default) -> TNULL;
+        t1: (hasCardCredential) -> done;
+        t1a: (!hasCardCredential) -> deleteFiles() @[5000] {
+            t2a: (hasCardCredential) -> done;
+            t2b: (!hasCardCredential) -> TNULL;
         }
     }
-    t3: (default) -> TNULL;
 }
 
 // If already has credit card's credentials but does not have the decrypted password,
 // crack the password from LDAP.
 strategy CrackPasswordStrategy
 [hasCardCredential] {
-    t0: (!validCardPassword) -> crackCardPassword() @[5000] {
-        t1: (validCardPassword) -> done;
-        t1a: (default) -> TNULL;
+    t0: (hasCardCredential) -> crackCardPassword() @[5000] {
+        t1: (hasCardPassword) -> done;
+        t1a: (!hasCardPassword) -> TNULL;
     }
-    t2: (default) -> TNULL;
 }
 
 
