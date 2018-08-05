@@ -126,7 +126,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 		if (expVal == 1) { // only process the strategy when true
 			for (int i = 0; i < ctx.strategyNode().size(); i++) { // traverse the list
 				System.out.println("visitStrategy: traverse list, statement "+i);
-				visit(ctx.strategyNode(i));
+				return visit(ctx.strategyNode(i));
 			}
 			return 1;
 		}

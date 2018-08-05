@@ -10,7 +10,7 @@ import com.jcraft.jsch.Session;
 
 public class ConnectionSSH {
 
-    public static boolean connect(String username, String host, String command) throws JSchException, IOException {
+    public static boolean connect(String host, String command) throws JSchException, IOException {
         // Timeout limit reference website: 
         // https://stackoverflow.com/questions/35009009/jsch-session-timeout-limit
         try {
@@ -18,7 +18,8 @@ public class ConnectionSSH {
             String pubKeyPath = "key";
             jsch.addIdentity(pubKeyPath);
 
-            Session session = jsch.getSession(username, host, 22);
+            // the username for ec2 instances are always ubuntu
+            Session session = jsch.getSession("ubuntu", host, 22);
             session.setConfig("StrictHostKeyChecking", "no");
             // set the timeout (ms) here
             int timeout = 2000;
