@@ -5,14 +5,14 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.Remote;
 import java.rmi.server.UnicastRemoteObject;
 import java.io.*;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
-public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
+public class AnsibleServer extends UnicastRemoteObject implements RmiAnsible {
 	
 	private static String ip;
 	private static int port;
-	private HashMap<String, Probe> probe;
+	private Map<String, Probe> probe;
 
 	/*
 	 * Ldap, Sales, Mail do not need probes
@@ -63,11 +63,6 @@ public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
 		if (file.exists()) {
 			return 1;
 		}
-		return 0;
-	}
-
-	@Override
-	public Integer checkLogin() throws RemoteException {
 		return 0;
 	} 
 

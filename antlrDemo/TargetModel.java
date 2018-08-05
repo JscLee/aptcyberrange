@@ -108,11 +108,6 @@ public class TargetModel implements Model {
 				e.printStackTrace();
 			}
 		} 
-		/* else if (id.equals("suspicious")) {
-			System.out.println("execHook: suspicious"); // has suspicious mail
-			Integer retVal = ansibleProbe.checkSuspicious();
-			return retVal;
-		} */
 		else if (id.equals("currentTime")) {
 			System.out.println("execHook: currentTime"); // show current time
 			return (int)System.currentTimeMillis();

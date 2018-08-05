@@ -1,10 +1,10 @@
-import java.util.HashMap;
-
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.io.*;
+import java.util.Map;
+import java.util.HashMap;
 
 public class AnsibleProbe {
 
