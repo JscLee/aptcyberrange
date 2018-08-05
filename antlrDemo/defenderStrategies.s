@@ -1,6 +1,6 @@
 module dos.strategies;
 
-import lib "DefenderTactics.s";
+import lib "defenderTactics.s";
 define boolean webPasswdExpired = (currentTime > M.WEB_THRESHOLD);
 
 // If has suspicious email, filter it. Actually implemented by using a random number.
