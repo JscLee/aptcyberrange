@@ -103,7 +103,7 @@ public class TargetModel implements Model {
 			Integer retVal = ansibleProbe.checkSuspicious();
 			return retVal;
 		} 
-		else if (id.equals("c.time")) {
+		else if (id.equals("currentTime")) {
 			System.out.println("execHook: currentTime"); // show current time
 			return (int)System.currentTimeMillis();
 		} 
