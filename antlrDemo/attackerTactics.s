@@ -1,5 +1,5 @@
 module dos.strategies;
-import model "Model.java" {Model.java as M};
+import model "TargetModel";
 
 tactic phishingEmail() {
     condition {
