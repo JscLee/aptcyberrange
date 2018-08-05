@@ -1,19 +1,13 @@
 module dos.strategies;
-import model "Model.java" {Model.java as M};
+
 import lib "DefenderTactics.s";
-// C is system under test (contractor), W is web server, P is payment server
-define boolean hasSuspiciousEmail = exists c : C.Server in M.components | (c.suspicious == true);
-define boolean webPasswdExpired = exists c : W.Server in M.components | (c.time > M.WEB_THRESHOLD);
-define boolean paymentPasswdExpired = exists c : W.Server in M.components | (c.time > P.PAYMENT_THRESHOLD);
-//define boolean hasSuspiciousEmail = false;
-//define boolean webPasswdExpired = false;
-//define boolean paymentPasswdExpired = false;
+define boolean webPasswdExpired = (currentTime > M.WEB_THRESHOLD);
 
 // If has suspicious email, filter it. Actually implemented by using a random number.
 strategy FilterEmailStrategy
-[hasSuspiciousEmail] {
-    t0: (hasSuspiciousEmail) -> filterEmail() @[5000] {
-        t1: (!hasSuspiciousEmail) -> done;
+[true] {
+    t0: (true) -> filterEmail() @[5000] {
+        t1: (success) -> done;
         t1a: (default) -> TNULL;
     }
     t2: (default) -> TNULL;
@@ -23,7 +17,7 @@ strategy FilterEmailStrategy
 strategy ChangeWebPasswordStrategy
 [webPasswdExpired] {
     t0: (webPasswdExpired) -> changeWebPassword() @[5000] {
-        t1: (!webPasswdExpired) -> done;
+        t1: (success) -> done;
         t1a: (default) -> TNULL;
     }
     t2: (default) -> TNULL;

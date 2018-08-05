@@ -27,9 +27,9 @@ public class TargetModel implements Model {
 		System.out.println("probe created");
 		otherProbe = ansibleProbe.getProbe();
 
-		int webThreshold = System.currentTimeMillis() + 20000;
+		int webThreshold = (int) System.currentTimeMillis() + 20000;
 		timeThresholds.put("webThreshold", webThreshold);
-		int paymentThreshold = System.currentTimeMillis() + 40000;
+		int paymentThreshold = (int) System.currentTimeMillis() + 40000;
 		timeThresholds.put("paymentThreshold", paymentThreshold);
 		System.out.println("webThreshold: " + webThreshold);
 		System.out.println("paymentThreshold: " + paymentThreshold);
@@ -89,7 +89,7 @@ public class TargetModel implements Model {
 		} 
 		else if (id.equals("c.time")) {
 			System.out.println("execHook: currentTime"); // show current time
-			return System.currentTimeMillis();
+			return (int)System.currentTimeMillis();
 		} 
 		else if (id.equals("WEB_THRESHOLD")) {
 			System.out.println("execHook: webThreshold"); // show web server's threshold
@@ -109,8 +109,8 @@ public class TargetModel implements Model {
 			webThreshold += 2000;
 			timeThresholds.put("webThreshold", webThreshold);
 		} 
-		if (id.equals("D.block")) {
-			
+		if (id.equals("filterPhishingEmail")) {
+
 		} 
 		if (id.equals("W.resetPassword")) {
 
@@ -118,7 +118,7 @@ public class TargetModel implements Model {
 		if (id.equals("A.send")) {
 
 		} 
-		if (id.equals("A.sendPhishingEmail")) {
+		if (id.equals("sendPhishingEmail")) {
 
 		} 
 		if (id.equals("A.downloadLogFile")) {

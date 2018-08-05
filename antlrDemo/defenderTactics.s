@@ -1,19 +1,15 @@
 module dos.strategies;
 import model "Model.java" {Model.java as M};
 
-// C is mail server (contractor), D is defender, W is web server, P is payment server
 tactic filterEmail() {
     condition {
-        exists lb : C.mail in C.newMail | lb.isPhishingEmail;
+        exists lb : mail in C.newMail | isPhishingEmail;
     }
     action {
-        set lbs = {select l : C.mail in C.newMail | l.isPhishingEmail};
-        for (C.mail l : lbs) {
-            D.block(l);
-        }
+        filterPhishingEmail(dummyParam);
     }
     effect {
-        forall lb : C.mail in C.newMail | !lb.isPhishingEmail;
+        forall lb : mail in C.newMail | !isPhishingEmail;
     }
 }
 
@@ -35,16 +31,11 @@ tactic filterEmail() {
 
 tactic changeWebPassword() {
     condition {
-        // W.time > W.threshold;
-        exists lb : W.server in W.components | lb.time > W.threshold;
-        // within timewindow or true
+         W.time > W.threshold;
     }
     action {
-        set lbs = {select l : W.server in W.components | l.time > W.threshold};
-        for (W.server l : lbs) {
-            W.resetPassword(l);
-        }
-        increaseThreshold(W.threshold); // update web server's threshold by adding 20 seconds
+        W.resetPassword(l);
+        increaseWebThreshold(l); // update web server's threshold by adding 20 seconds
     }
     effect {
         true;
