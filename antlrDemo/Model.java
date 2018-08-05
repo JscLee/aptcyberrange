@@ -9,4 +9,5 @@ public interface Model {
 	abstract public String getName();
 	abstract public Integer execHook(String id);
 	abstract public Integer execOperations(String id);
+	abstract public Integer checkAttackResult();
 }
