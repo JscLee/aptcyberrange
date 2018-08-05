@@ -38,7 +38,7 @@ tactic changeWebPassword() {
         increaseWebThreshold(l); // update web server's threshold by adding 20 seconds
     }
     effect {
-        true;
+        W.time < W.threshold;
     }
 }
 
