@@ -270,9 +270,8 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 		String id = ctx.IDENTIFIER().getText();
 		System.out.println("visitMethodCall: id is "+id);
 		// TODO: the method is hard coded, it should be from a list in the model
-		// return model.executeOperations(id); // Integer
 
-		return model.executeOperations(id);
+		return model.execOperations(id);
 	}
 
 	/*
