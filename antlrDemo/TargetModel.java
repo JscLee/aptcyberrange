@@ -23,8 +23,6 @@ public class TargetModel implements Model {
 		hooks.add("hasCredential");
 		System.out.println("Creating probe...");
 		ansibleProbe = new AnsibleProbe(machine.get("ansible"), 15213); // magic number for port, hardcode ansible server
-		// probe = new Probe("128.237.200.112", 15213); // testing only
-		// probe = new Probe("18.204.18.19", 1099); // testing only
 		System.out.println("probe created");
 		otherProbe = ansibleProbe.getProbe();
 
@@ -139,8 +137,8 @@ public class TargetModel implements Model {
 		if (id.equals("W.resetPassword")) {
 			String newPassword = String.valueOf(System.currentTimeMillis() + 1);
 			try {
-				boolean conn = ConnectionSSH.connect("ansible", machine.get("ansible"), 
-					"ansible-playbook inject/resetWebPassword.yml --extra-vars '{\"new_password\":newPassword}'");
+			    String command = "ansible-playbook inject/resetWebPassword.yml --extra-vars '{\"new_password\":" + newPassword + "}'";
+				boolean conn = ConnectionSSH.connect("ansible", machine.get("ansible"), command);
 				if (!conn) {
 					System.err.println("session connection timeout, wrong IP address?");
 					return 0;
@@ -149,44 +147,137 @@ public class TargetModel implements Model {
 				e.printStackTrace();
 			}
 		} 
-		if (id.equals("A.send")) {
-
-		} 
 		if (id.equals("sendPhishingEmail")) {
-
+			try {
+				boolean conn = ConnectionSSH.connect("blackhat", machine.get("blackhat"), "ansible-playbook inject/sendPhishingEmail.yml");
+				if (!conn) {
+					System.err.println("session connection timeout, wrong IP address?");
+					return 0;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} 
 		if (id.equals("A.downloadLogFile")) {
-
+			try {
+				boolean conn = ConnectionSSH.connect("blackhat", machine.get("blackhat"), "ansible-playbook inject/downloadLogFile.yml");
+				if (!conn) {
+					System.err.println("session connection timeout, wrong IP address?");
+					return 0;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} 
 		if (id.equals("A.decodeLogFile")) {
-
+			try {
+				boolean conn = ConnectionSSH.connect("blackhat", machine.get("blackhat"), "ansible-playbook inject/decodeLogFile.yml");
+				if (!conn) {
+					System.err.println("session connection timeout, wrong IP address?");
+					return 0;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} 
 		if (id.equals("A.loginWeb")) {
-
+			try {
+				boolean conn = ConnectionSSH.connect("blackhat", machine.get("blackhat"), "ansible-playbook inject/loginWeb.yml");
+				if (!conn) {
+					System.err.println("session connection timeout, wrong IP address?");
+					return 0;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} 
 		if (id.equals("A.injectShell")) {
-
+			try {
+				boolean conn = ConnectionSSH.connect("blackhat", machine.get("blackhat"), "ansible-playbook inject/injectShell.yml");
+				if (!conn) {
+					System.err.println("session connection timeout, wrong IP address?");
+					return 0;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} 
 		if (id.equals("A.crackPasswd")) {
-
+			try {
+				boolean conn = ConnectionSSH.connect("blackhat", machine.get("blackhat"), "ansible-playbook inject/crackPasswd.yml");
+				if (!conn) {
+					System.err.println("session connection timeout, wrong IP address?");
+					return 0;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} 
 		if (id.equals("A.storePasswd")) {
-
+			try {
+				boolean conn = ConnectionSSH.connect("blackhat", machine.get("blackhat"), "ansible-playbook inject/storePasswd.yml");
+				if (!conn) {
+					System.err.println("session connection timeout, wrong IP address?");
+					return 0;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} 
 		if (id.equals("A.firmware")) {
-
+			try {
+				boolean conn = ConnectionSSH.connect("blackhat", machine.get("blackhat"), "ansible-playbook inject/firmware.yml");
+				if (!conn) {
+					System.err.println("session connection timeout, wrong IP address?");
+					return 0;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} 
 		if (id.equals("A.transaction")) {
-
+			try {
+				boolean conn = ConnectionSSH.connect("blackhat", machine.get("blackhat"), "ansible-playbook inject/tracsaction.yml");
+				if (!conn) {
+					System.err.println("session connection timeout, wrong IP address?");
+					return 0;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		if (id.equals("A.deleteLogFile")) {
-
+			try {
+				boolean conn = ConnectionSSH.connect("blackhat", machine.get("blackhat"), "python filterEmail.py");
+				if (!conn) {
+					System.err.println("session connection timeout, wrong IP address?");
+					return 0;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		if (id.equals("A.deleteWebCredential")) {
-
+			try {
+				boolean conn = ConnectionSSH.connect("blackhat", machine.get("blackhat"), "python filterEmail.py");
+				if (!conn) {
+					System.err.println("session connection timeout, wrong IP address?");
+					return 0;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		if (id.equals("F.deleteLogFile")) {
-
+			try {
+				boolean conn = ConnectionSSH.connect("ftp", machine.get("ftp"), "python filterEmail.py");
+				if (!conn) {
+					System.err.println("session connection timeout, wrong IP address?");
+					return 0;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return 1;
 	}
