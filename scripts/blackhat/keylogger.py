@@ -1,6 +1,8 @@
 import ftplib
 from string import ascii_lowercase, ascii_uppercase
 from random import random, randint
+import os
+import json
 
 # constants
 ALPHA_KEYS = list(ascii_lowercase)
@@ -17,9 +19,13 @@ SUB_KEYS = NON_SHIFT_KEYS + SHIFT_KEYS
 KEYS = SUB_KEYS + ARROW_KEYS + FUNC_KEYS
 
 # global
-url = "web.fazio.com"
-email = "contractor@fazio.com"
-pswd = "password"
+fileToSearch  = '/home/ubuntu/logInfo.json'
+with open(fileToSearch) as f:
+  data = json.load(f)
+  url = data['URL']
+  email = data['Email']
+  pswd = data['Password']
+  
 backspace_prob = 0.01
 shift_prob = 0.05
 
@@ -59,6 +65,9 @@ def garble(size):
   return(shift(backspace(text, backspace_prob)))
 
 def main():
+  if os.path.isfile('logs.txt'):
+    os.remove('logs.txt')
+
   f = open("logs.txt", "a+")
   f.write(garble(1000))
   f.write(shift(backspace(url, backspace_prob)) + "[enter]")
@@ -75,6 +84,10 @@ def main():
   ftp.connect(host, port)
   ftp.login()
   ftp.cwd("upload")
+  try:
+    ftp.delete('/upload/logs.txt')
+  except:
+    pass
   ftp.storbinary("STOR logs.txt", open("logs.txt", "rb"))
   ftp.close()
 

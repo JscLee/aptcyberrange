@@ -1,0 +1,9 @@
+---
+#
+# decode keylogger file
+#
+- name: recover captured credentials
+  hosts: blackhat
+  tasks:
+    - name: decode keylogger file
+      raw: python decoder.py
