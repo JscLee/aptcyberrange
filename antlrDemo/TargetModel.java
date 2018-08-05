@@ -133,6 +133,7 @@ public class TargetModel implements Model {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Phishing email is filtered");
 		} 
 		if (id.equals("W.resetPassword")) {
 			String newPassword = String.valueOf(System.currentTimeMillis() + 1);
@@ -146,6 +147,7 @@ public class TargetModel implements Model {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Password is reset");
 		} 
 		if (id.equals("sendPhishingEmail")) {
 			try {
@@ -157,6 +159,7 @@ public class TargetModel implements Model {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Phishing email is sent");
 		} 
 		if (id.equals("A.downloadLogFile")) {
 			try {
@@ -168,6 +171,7 @@ public class TargetModel implements Model {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Log file is downloaded");
 		} 
 		if (id.equals("A.decodeLogFile")) {
 			try {
@@ -179,6 +183,7 @@ public class TargetModel implements Model {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Log file is decoded");
 		} 
 		if (id.equals("A.loginWeb")) {
 			try {
@@ -190,6 +195,7 @@ public class TargetModel implements Model {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Login web server");
 		} 
 		if (id.equals("A.injectShell")) {
 			try {
@@ -201,6 +207,7 @@ public class TargetModel implements Model {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Shell injection");
 		} 
 		if (id.equals("A.crackPasswd")) {
 			try {
@@ -212,6 +219,7 @@ public class TargetModel implements Model {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Password is cracked");
 		} 
 		if (id.equals("A.storePasswd")) {
 			try {
@@ -223,6 +231,7 @@ public class TargetModel implements Model {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Password is stored");
 		} 
 		if (id.equals("A.firmware")) {
 			try {
@@ -234,6 +243,7 @@ public class TargetModel implements Model {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Firmware");
 		} 
 		if (id.equals("A.transaction")) {
 			try {
@@ -245,6 +255,7 @@ public class TargetModel implements Model {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Transaction");
 		}
 		if (id.equals("A.deleteLogFile")) {
 			try {
@@ -256,6 +267,7 @@ public class TargetModel implements Model {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Log file is deleted");
 		}
 		if (id.equals("A.deleteWebCredential")) {
 			try {
@@ -267,6 +279,7 @@ public class TargetModel implements Model {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Web credential is deleted");
 		}
 		if (id.equals("F.deleteLogFile")) {
 			try {
@@ -278,6 +291,7 @@ public class TargetModel implements Model {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Log file is deleted in FTP server");
 		}
 		return 1;
 	}
