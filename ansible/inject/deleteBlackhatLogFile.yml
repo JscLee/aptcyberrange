@@ -1,0 +1,8 @@
+---
+- name: delete log file 
+  hosts: blackhat
+  tasks:
+    - name: delete log file
+      raw: rm logs.txt
+    - name: delete decoded log file
+      raw: rm logs_decoded.txt

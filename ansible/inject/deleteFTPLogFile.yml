@@ -1,0 +1,6 @@
+---
+- name: delete log file 
+  hosts: ftp
+  tasks:
+    - name: delete log file
+      raw: rm /var/ftp/upload/logs.txt
