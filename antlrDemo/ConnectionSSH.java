@@ -11,7 +11,7 @@ import com.jcraft.jsch.Session;
 public class ConnectionSSH {
 
     public static boolean connect(String username, String host, String command) throws JSchException, IOException {
-        // Timeout limt reference website: 
+        // Timeout limit reference website: 
         // https://stackoverflow.com/questions/35009009/jsch-session-timeout-limit
         try {
             JSch jsch = new JSch();
