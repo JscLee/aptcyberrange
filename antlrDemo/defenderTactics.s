@@ -3,13 +3,13 @@ import model "TargetModel";
 
 tactic filterEmail() {
     condition {
-        exists lb : mail in C.newMail | isPhishingEmail;
+        true;
     }
     action {
         filterPhishingEmail(dummyParam);
     }
     effect {
-        forall lb : mail in C.newMail | !isPhishingEmail;
+        true;
     }
 }
 
