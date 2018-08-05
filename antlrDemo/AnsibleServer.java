@@ -14,19 +14,19 @@ public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
 	private static int port;
 	private HashMap<String, Probe> probe;
 
+	/*
+	 * Ldap, Sales, Mail do not need probes
+	 */
 	public AnsibleServer() throws RemoteException {
 		super();
 		probe = new HashMap<String, Probe>();
-		probe.put("elk", new ElkProbe("10.0.0.11", 15214));
-		probe.put("wazuh", new WazuhProbe("10.0.0.12", 15214));
-		probe.put("contractor", new ContractorProbe("10.0.0.14", 15214));
-		//probe.put("mail", new MailProbe("10.0.0.15", 15214)); 
-		probe.put("web", new WebProbe("10.0.0.16", 15214));
-		probe.put("ldap", new LdapProbe("10.0.0.17", 15214));
-		probe.put("blackhat", new BlackhatProbe("10.0.0.18", 15214));
-		probe.put("ftp", new FtpProbe("10.0.0.19", 15214));
-		probe.put("payments", new PaymentsProbe("10.0.0.20", 15214));
-		probe.put("sales", new SalesProbe("10.0.0.21", 15214));
+		// probe.put("elk", new ElkProbe("10.0.0.11", 15214));
+		// probe.put("wazuh", new WazuhProbe("10.0.0.12", 15214));
+		probe.put("contractor", new ContractorProbe("54.162.92.101", 15214));
+		// probe.put("web", new WebProbe("10.0.0.16", 15214));
+		probe.put("blackhat", new BlackhatProbe("18.210.15.175", 15214));
+		probe.put("ftp", new FtpProbe("34.229.56.58", 15214));
+		// probe.put("payments", new PaymentsProbe("10.0.0.20", 15214));
 	}
 
 	public static void main(String[] args) {
@@ -71,7 +71,8 @@ public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
 		return 0;
 	} 
 
-	public HashMap<String, Probe> getProbe() {
+	@Override
+	public HashMap<String, Probe> getProbe() throws RemoteException {
 		return new HashMap<String, Probe>(probe);
 	}
 

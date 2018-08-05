@@ -104,7 +104,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			// CASE 2: variable defined earlier
 			int ret = memory.getOrDefault(id, -1);
 			if (ret == -1) {
-				throw new RuntimeException("identifier not defined");
+				throw new RuntimeException("visitIDExpression: identifier not defined");
 			}
 			// CASE 3: variable is a number (if the first char of the String is a number)
 			if (Character.isDigit(id.charAt(0))) {
@@ -283,14 +283,18 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	 */
 	@Override
 	public Integer visitLogicalAndExpression(StitchParser.LogicalAndExpressionContext ctx) {
-		int equalityVal = visit(ctx.equalityExpression());
-		int logicalAndVal = visit(ctx.logicalAndExpression());
-		if (equalityVal == logicalAndVal) {
-			System.out.println("LogicalAndExpression: returning 1 (true)");
-			return 1;
+		if (ctx.equalityExpression() != null && ctx.logicalAndExpression() != null) {
+			int equalityVal = visit(ctx.equalityExpression());
+			int logicalAndVal = visit(ctx.logicalAndExpression());
+			if (equalityVal == logicalAndVal) {
+				System.out.println("LogicalAndExpression: returning 1 (true)");
+				return 1;
+			} else {
+				System.out.println("LogicalAndExpression: returning 0 (false)");
+				return 0;
+			}
 		} else {
-			System.out.println("LogicalAndExpression: returning 0 (false)");
-			return 0;
+			return visitChildren(ctx);
 		}
 	}
 }
