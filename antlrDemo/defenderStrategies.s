@@ -7,20 +7,19 @@ define boolean webPasswdExpired = (currentTime > M.WEB_THRESHOLD);
 strategy FilterEmailStrategy
 [true] {
     t0: (true) -> filterEmail() @[5000] {
-        t1: (success) -> done;
-        t1a: (default) -> TNULL;
+        t1: (true) -> done;
+        t1a: (false) -> TNULL;
     }
-    t2: (default) -> TNULL;
+    t2: (false) -> TNULL;
 }
 
 // If web server's password is expired (has not change in a long time), modify it.
 strategy ChangeWebPasswordStrategy
 [webPasswdExpired] {
     t0: (webPasswdExpired) -> changeWebPassword() @[5000] {
-        t1: (success) -> done;
-        t1a: (default) -> TNULL;
+        t1: (!webPasswdExpired) -> done;
+        t1a: (webPasswdExpired) -> TNULL;
     }
-    t2: (default) -> TNULL;
 }
 
 // If payment server's password is expired (has not change in a long time), modify it.
