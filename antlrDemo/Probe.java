@@ -3,8 +3,9 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.io.*;
+import java.io.Serializable;
 
-public class Probe {
+public class Probe implements Serializable {
 
 	protected RmiServer srv;
 

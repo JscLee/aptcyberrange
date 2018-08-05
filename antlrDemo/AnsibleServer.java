@@ -19,11 +19,11 @@ public class AnsibleServer extends UnicastRemoteObject implements RmiAnsible {
 		probe = new HashMap<String, Probe>();
 		//probe.put("elk", new ElkProbe("10.0.0.11", 15214));
 		//probe.put("wazuh", new WazuhProbe("10.0.0.12", 15214));
-		probe.put("contractor", new ContractorProbe("10.0.0.14", 15214));
+		//probe.put("contractor", new ContractorProbe("10.0.0.14", 15214));
 		//probe.put("mail", new MailProbe("10.0.0.15", 15214)); 
 		//probe.put("web", new WebProbe("10.0.0.16", 15214));
-		probe.put("blackhat", new BlackhatProbe("10.0.0.18", 15214));
-		probe.put("ftp", new FtpProbe("10.0.0.19", 15214));
+		//probe.put("blackhat", new BlackhatProbe("10.0.0.18", 15214));
+		//probe.put("ftp", new FtpProbe("10.0.0.19", 15214));
 		//probe.put("payments", new PaymentsProbe("10.0.0.20", 15214));
 	}
 
