@@ -1,3 +1,4 @@
+import java.util.HashMap;
 
 public class AnsibleProbe extends Probe {
 
@@ -5,8 +6,8 @@ public class AnsibleProbe extends Probe {
 		super(srvIP, srvPort);
 	}
 
-	public Map<String, Probe> getProbe() {
-		return srv.getProbe();
+	public HashMap<String, Probe> getProbe() {
+		return ((AnsibleServer)srv).getProbe();
 	}
 	
 	// defender uses this to decide whether filterEmail should be used

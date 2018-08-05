@@ -3,13 +3,14 @@ import java.util.Map;
 import java.util.HashSet;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
+import java.rmi.RemoteException;
 
 public class TargetModel implements Model {
 	
 	private Map<String, String> machine;
 	private Map<String, StitchParser.TacticContext> tactics;
 	private HashSet<String> hooks;
-	private Probe ansibleProbe;
+	private AnsibleProbe ansibleProbe;
 	private Map<String, Probe> otherProbe;
 	private Map<String, Integer> timeThresholds;
 
@@ -68,19 +69,34 @@ public class TargetModel implements Model {
 	public Integer execHook(String id) {
 		if (id.equals("hasCard")) {
 			System.out.println("execHook: hasCard"); // has card credential
-			Integer retVal = otherProbe.get("Blackhat").checkFile("~/passwd") && 
-							 otherProbe.get("Blackhat").checkFile("~/shadow"); 
-			return retVal; 
+			try {
+				Integer retVal = ((BlackhatProbe)otherProbe.get("Blackhat")).checkFile("~/passwd") + 
+							 ((BlackhatProbe)otherProbe.get("Blackhat")).checkFile("~/shadow");
+				if (retVal != 2) {
+					return 0;  
+				} 
+				return 1;
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			} 
 		} 
 		else if (id.equals("hasLog")) {
 			System.out.println("execHook: hasLogFile"); // has log file
-			Integer retVal = otherProbe.get("Ftp").checkFile("/upload/logs.txt");  
-			return retVal; 
+			try {
+				Integer retVal = ((FtpProbe)otherProbe.get("Ftp")).checkFile("/upload/logs.txt");  
+				return retVal; 
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
 		} 
 		else if (id.equals("hasWeb")) {
 			System.out.println("execHook: hasWeb"); // has web credential
-			Integer retVal = otherProbe.get("Blackhat").checkFile("~/logs_decoded.txt"); 
-			return retVal; 
+			try {
+				Integer retVal = ((BlackhatProbe)otherProbe.get("Blackhat")).checkFile("~/logs_decoded.txt"); 
+				return retVal; 
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
 		} 
 		else if (id.equals("suspicious")) {
 			System.out.println("execHook: suspicious"); // has suspicious mail
@@ -110,10 +126,28 @@ public class TargetModel implements Model {
 			timeThresholds.put("webThreshold", webThreshold);
 		} 
 		if (id.equals("filterPhishingEmail")) {
-
+			try {
+				boolean conn = ConnectionSSH.connect("contractor", machine.get("contractor"), "python filterEmail.py");
+				if (!conn) {
+					System.err.println("session connection timeout, wrong IP address?");
+					return 0;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} 
 		if (id.equals("W.resetPassword")) {
-
+			String newPassword = String.valueOf(System.currentTimeMillis() + 1);
+			try {
+				boolean conn = ConnectionSSH.connect("ansible", machine.get("ansible"), 
+					"ansible-playbook inject/resetWebPassword.yml --extra-vars '{\"new_password\":newPassword}'");
+				if (!conn) {
+					System.err.println("session connection timeout, wrong IP address?");
+					return 0;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} 
 		if (id.equals("A.send")) {
 
@@ -154,5 +188,6 @@ public class TargetModel implements Model {
 		if (id.equals("F.deleteLogFile")) {
 
 		}
+		return 1;
 	}
 }

@@ -12,7 +12,7 @@ public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
 	
 	private static String ip;
 	private static int port;
-	private Map<String, Probe> probe;
+	private HashMap<String, Probe> probe;
 
 	public AnsibleServer() throws RemoteException {
 		super();
@@ -71,7 +71,7 @@ public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
 		return 0;
 	} 
 
-	public Map<String, Probe> getProbe() {
+	public HashMap<String, Probe> getProbe() {
 		return new HashMap<String, Probe>(probe);
 	}
 
