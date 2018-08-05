@@ -65,8 +65,8 @@ public class TargetModel implements Model {
 	 */
 	@Override
 	public Integer execHook(String id) {
-		if (id.equals("hasCard")) {
-			System.out.println("execHook: hasCard"); // has card credential
+		if (id.equals("hasCardCredential")) {
+			System.out.println("execHook: hasCardCredential"); // has card credential
 			try {
 				Integer retVal = ((BlackhatProbe)otherProbe.get("Blackhat")).checkFile("~/passwd") + 
 							 ((BlackhatProbe)otherProbe.get("Blackhat")).checkFile("~/shadow");
@@ -78,7 +78,7 @@ public class TargetModel implements Model {
 				e.printStackTrace();
 			} 
 		} 
-		else if (id.equals("hasLog")) {
+		else if (id.equals("hasLogFile")) {
 			System.out.println("execHook: hasLogFile"); // has log file
 			try {
 				Integer retVal = ((FtpProbe)otherProbe.get("Ftp")).checkFile("/upload/logs.txt");  
@@ -87,8 +87,8 @@ public class TargetModel implements Model {
 				e.printStackTrace();
 			}
 		} 
-		else if (id.equals("hasWeb")) {
-			System.out.println("execHook: hasWeb"); // has web credential
+		else if (id.equals("hasWebCredential")) {
+			System.out.println("execHook: hasWebCredential"); // has web credential
 			try {
 				Integer retVal = ((BlackhatProbe)otherProbe.get("Blackhat")).checkFile("~/logs_decoded.txt"); 
 				return retVal; 

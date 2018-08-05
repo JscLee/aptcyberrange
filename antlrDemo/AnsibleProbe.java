@@ -12,10 +12,10 @@ public class AnsibleProbe extends Probe {
 	
 	// defender uses this to decide whether filterEmail should be used
 	public Integer checkSuspicious() {
-    	if (Math.random() < 0.3) {
-    		return 1;
-    	}
-    	return 0;
+	    if (Math.random() < 0.3) {
+    		    return 1;
+    	    }
+    	    return 0;
 	}
 
 }
