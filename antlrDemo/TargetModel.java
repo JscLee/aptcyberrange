@@ -73,6 +73,20 @@ public class TargetModel implements Model {
 	}
 
 	/*
+	 * Check whether the whole attack succeeds or not
+	 */
+	@Override
+	public Integer checkAttackResult() {
+		System.out.println("check attack result"); // has transactions file
+			try {
+				Integer retVal = ((FtpProbe)otherProbe.get("ftp")).checkFile("/upload/transactions.txt");  
+				return retVal; 
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+	}
+
+	/*
 	 * Implement all the hooks right here
 	 */
 	@Override
@@ -134,7 +148,7 @@ public class TargetModel implements Model {
 			try {
 				boolean conn = ConnectionSSH.connect(machine.get("contractor"), "python filterEmail.py");
 				if (!conn) {
-					System.err.println("session connection timeout, wrong IP address?");
+					System.err.println("session connection 1 timeout, wrong IP address?");
 					return 0;
 				}
 			} catch (Exception e) {
@@ -148,7 +162,7 @@ public class TargetModel implements Model {
 			    String command = "ansible-playbook inject/resetWebPassword.yml --extra-vars '{\"new_password\":" + newPassword + "}'";
 				boolean conn = ConnectionSSH.connect(machine.get("ansible"), command);
 				if (!conn) {
-					System.err.println("session connection timeout, wrong IP address?");
+					System.err.println("session connection 2 timeout, wrong IP address?");
 					return 0;
 				}
 			} catch (Exception e) {
@@ -160,7 +174,7 @@ public class TargetModel implements Model {
 			try {
 				boolean conn = ConnectionSSH.connect(machine.get("blackhat"), "ansible-playbook inject/sendPhishingEmail.yml");
 				if (!conn) {
-					System.err.println("session connection timeout, wrong IP address?");
+					System.err.println("session connection 3 timeout, wrong IP address?");
 					return 0;
 				}
 			} catch (Exception e) {
@@ -172,7 +186,7 @@ public class TargetModel implements Model {
 			try {
 				boolean conn = ConnectionSSH.connect(machine.get("blackhat"), "ansible-playbook inject/downloadLogFile.yml");
 				if (!conn) {
-					System.err.println("session connection timeout, wrong IP address?");
+					System.err.println("session connection 4 timeout, wrong IP address?");
 					return 0;
 				}
 			} catch (Exception e) {
@@ -184,7 +198,7 @@ public class TargetModel implements Model {
 			try {
 				boolean conn = ConnectionSSH.connect(machine.get("blackhat"), "ansible-playbook inject/decodeLogFile.yml");
 				if (!conn) {
-					System.err.println("session connection timeout, wrong IP address?");
+					System.err.println("session connection 5 timeout, wrong IP address?");
 					return 0;
 				}
 			} catch (Exception e) {
@@ -196,7 +210,7 @@ public class TargetModel implements Model {
 			try {
 				boolean conn = ConnectionSSH.connect(machine.get("blackhat"), "ansible-playbook inject/loginWeb.yml");
 				if (!conn) {
-					System.err.println("session connection timeout, wrong IP address?");
+					System.err.println("session connection 6 timeout, wrong IP address?");
 					return 0;
 				}
 			} catch (Exception e) {
@@ -208,7 +222,7 @@ public class TargetModel implements Model {
 			try {
 				boolean conn = ConnectionSSH.connect(machine.get("blackhat"), "ansible-playbook inject/injectShell.yml");
 				if (!conn) {
-					System.err.println("session connection timeout, wrong IP address?");
+					System.err.println("session connection 7 timeout, wrong IP address?");
 					return 0;
 				}
 			} catch (Exception e) {
@@ -220,7 +234,7 @@ public class TargetModel implements Model {
 			try {
 				boolean conn = ConnectionSSH.connect(machine.get("blackhat"), "ansible-playbook inject/crackPasswd.yml");
 				if (!conn) {
-					System.err.println("session connection timeout, wrong IP address?");
+					System.err.println("session connection 8 timeout, wrong IP address?");
 					return 0;
 				}
 			} catch (Exception e) {
@@ -232,7 +246,7 @@ public class TargetModel implements Model {
 			try {
 				boolean conn = ConnectionSSH.connect(machine.get("blackhat"), "ansible-playbook inject/storePasswd.yml");
 				if (!conn) {
-					System.err.println("session connection timeout, wrong IP address?");
+					System.err.println("session connection 9 timeout, wrong IP address?");
 					return 0;
 				}
 			} catch (Exception e) {
@@ -244,7 +258,7 @@ public class TargetModel implements Model {
 			try {
 				boolean conn = ConnectionSSH.connect(machine.get("blackhat"), "ansible-playbook inject/firmware.yml");
 				if (!conn) {
-					System.err.println("session connection timeout, wrong IP address?");
+					System.err.println("session connection 10 timeout, wrong IP address?");
 					return 0;
 				}
 			} catch (Exception e) {
@@ -256,7 +270,7 @@ public class TargetModel implements Model {
 			try {
 				boolean conn = ConnectionSSH.connect(machine.get("blackhat"), "ansible-playbook inject/tracsaction.yml");
 				if (!conn) {
-					System.err.println("session connection timeout, wrong IP address?");
+					System.err.println("session connection 11 timeout, wrong IP address?");
 					return 0;
 				}
 			} catch (Exception e) {
@@ -266,9 +280,9 @@ public class TargetModel implements Model {
 		}
 		if (id.equals("A.deleteLogFile")) {
 			try {
-				boolean conn = ConnectionSSH.connect(machine.get("blackhat"), "python filterEmail.py");
+				boolean conn = ConnectionSSH.connect(machine.get("blackhat"), "ansible-playbook inject/deleteBlackhatLogFile.yml");
 				if (!conn) {
-					System.err.println("session connection timeout, wrong IP address?");
+					System.err.println("session connection 12 timeout, wrong IP address?");
 					return 0;
 				}
 			} catch (Exception e) {
@@ -278,9 +292,9 @@ public class TargetModel implements Model {
 		}
 		if (id.equals("A.deleteWebCredential")) {
 			try {
-				boolean conn = ConnectionSSH.connect(machine.get("blackhat"), "python filterEmail.py");
+				boolean conn = ConnectionSSH.connect(machine.get("blackhat"), "ansible-playbook inject/deleteWebCredential.yml");
 				if (!conn) {
-					System.err.println("session connection timeout, wrong IP address?");
+					System.err.println("session connection 13 timeout, wrong IP address?");
 					return 0;
 				}
 			} catch (Exception e) {
@@ -290,9 +304,9 @@ public class TargetModel implements Model {
 		}
 		if (id.equals("F.deleteLogFile")) {
 			try {
-				boolean conn = ConnectionSSH.connect(machine.get("ftp"), "python filterEmail.py");
+				boolean conn = ConnectionSSH.connect(machine.get("ftp"), "ansible-playbook inject/deleteFTPLogFile.yml");
 				if (!conn) {
-					System.err.println("session connection timeout, wrong IP address?");
+					System.err.println("session connection 14 timeout, wrong IP address?");
 					return 0;
 				}
 			} catch (Exception e) {
