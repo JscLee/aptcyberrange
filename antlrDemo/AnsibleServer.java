@@ -5,14 +5,14 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.Remote;
 import java.rmi.server.UnicastRemoteObject;
 import java.io.*;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
-public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
+public class AnsibleServer extends UnicastRemoteObject implements RmiAnsible {
 	
 	private static String ip;
 	private static int port;
-	private HashMap<String, Probe> probe;
+	private Map<String, Probe> probe;
 
 	public AnsibleServer() throws RemoteException {
 		super();
@@ -62,14 +62,10 @@ public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
 			return 1;
 		}
 		return 0;
-	}
-
-	@Override
-	public Integer checkLogin() throws RemoteException {
-		return 0;
 	} 
 
-	public HashMap<String, Probe> getProbe() {
+	@Override
+	public Map<String, Probe> getProbe() throws RemoteException {
 		return new HashMap<String, Probe>(probe);
 	}
 

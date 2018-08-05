@@ -53,11 +53,6 @@ public class Server extends UnicastRemoteObject implements RmiServer {
 		return 0;
 	}
 
-	@Override
-	public Integer checkLogin() throws RemoteException {
-		return 0;
-	} 
-
 }
 
 	

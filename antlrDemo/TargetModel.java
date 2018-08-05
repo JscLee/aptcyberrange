@@ -24,7 +24,11 @@ public class TargetModel implements Model {
 		System.out.println("Creating probe...");
 		ansibleProbe = new AnsibleProbe(machine.get("ansible"), 15213); // magic number for port, hardcode ansible server
 		System.out.println("probe created");
-		otherProbe = ansibleProbe.getProbe();
+		try {
+            otherProbe = ansibleProbe.getProbe();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
 
 		int webThreshold = (int) System.currentTimeMillis() + 20000;
 		timeThresholds.put("webThreshold", webThreshold);
@@ -95,11 +99,6 @@ public class TargetModel implements Model {
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-		} 
-		else if (id.equals("suspicious")) {
-			System.out.println("execHook: suspicious"); // has suspicious mail
-			Integer retVal = ansibleProbe.checkSuspicious();
-			return retVal;
 		} 
 		else if (id.equals("currentTime")) {
 			System.out.println("execHook: currentTime"); // show current time
