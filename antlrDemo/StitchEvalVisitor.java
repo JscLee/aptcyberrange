@@ -55,6 +55,27 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	}
 
 	/*
+	 * only useful for a List of Mail (type) objects
+	 */
+	@Override
+	public Integer visitQuantifiedExpression(StitchParser.QuantifiedExpressionContext ctx) {
+		if (ctx.FORALL() != null) { // FORALL
+			System.out.println("forall expression, not implemeneted");
+		} else if (ctx.EXISTS() != null) {
+			System.out.println("exists expression, not implemeneted");
+			// visit(ctx.param()) // we don't use visit here
+			// String receivedParam = getParams(ctx.param())
+		} else if (ctx.SELECT() != null) {
+			System.out.println("select expression, not implemeneted");
+		} else {
+			System.err.println("visitQuantifiedExpression: sentence not supported");
+		}
+		return visitChildren(ctx);
+	}
+
+	// private String getParams()
+
+	/*
 	 * Handles boolean values: 1 is true; 0 is false
 	 * 
 	 * Handles system hooks' returns
@@ -84,6 +105,10 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			int ret = memory.getOrDefault(id, -1);
 			if (ret == -1) {
 				throw new RuntimeException("identifier not defined");
+			}
+			// CASE 3: variable is a number (if the first char of the String is a number)
+			if (Character.isDigit(id.charAt(0))) {
+				return Integer.valueOf(id);
 			} else {
 				System.out.println("variable defined earlier, returning "+ret);
 				return ret;
@@ -160,6 +185,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	/*
 	 * Only consider "filterEmail"
 	 * Now also consider earlier scanned tactics
+	 * TODO: success, default
 	 */
 	@Override
 	public Integer visitTacticRef(StitchParser.TacticRefContext ctx) {
@@ -167,44 +193,27 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			for (int i = 0; i < ctx.IDENTIFIER().size(); i++) {
 				String id = ctx.IDENTIFIER().get(i).getText();
 				System.out.println("visitTacticRef: id is "+id);
-				// This is only for testing purpose now, lookup and run should handle everything
-				if (id.equals("filterEmail")) {
-					System.out.println("visitTacticRef: filterEmail invoked");
-					// https://blog.art-of-coding.eu/executing-operating-system-commands-from-java/
-					try {
-						System.out.println("!!ssh");
-						boolean connSuccess = ConnectionSSH.connect("ubuntu", "34.200.226.46", "python test.py");
-						if (!connSuccess) {
-							System.out.println("session connection timeout, wrong IP address?");
-							return 0;
-						}
-						// TODO: need to handle the "answering yes" condition
-						// TODO: need to handle more failure conditions
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else { // the new case where "lookup and run" is used
-					System.out.println("visitTacticRef: lookup and run tactic "+id);
-					if (model.getTactics().containsKey(id)) {
-						System.out.println("found tactic! id: "+id);
-						int success = execTactic(id);
-					} else {
-						System.out.println("tactic not found! id: "+id);
-					}
+				System.out.println("visitTacticRef: lookup and run tactic "+id);
+				if (model.getTactics().containsKey(id)) {
+					System.out.println("found tactic! id: "+id);
+					int success = execTactic(id);
+				} else {
+					System.out.println("tactic not found! id: "+id);
 				}
 			}
 		}
-		if (ctx.DONE() == null) {
+		if (ctx.DONE() == null && ctx.NULLTACTIC() == null) {
 			System.out.println("visitTacticRef: visiting strategyBranch");
 			return visit(ctx.strategyBranch());
 		}
-		System.out.println("visitTacticRef: strategyBranch is 'done'");
+		System.out.println("visitTacticRef: strategyBranch is 'done' or 'TNULL");
 		return 1; // return 1 when strategyBranch is DONE
 		
 	}
 
 	/*
 	 * Execute the selected tactic
+	 * TODO: add loop on effect for time defined in tactic ref
 	 */
 	private Integer execTactic(String name) {
 		StitchParser.TacticContext ctx = model.getTactics().get(name);
@@ -213,6 +222,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 		if (visit(ctx.condition()) == 1) { // only continue when the condition is met
 			System.out.println("execTactic: condition is true");
 			visit(ctx.action());
+			// TODO: loop on ctx.effect(), implement visitEffect()
 		} else {
 			System.out.println("execTactic: condition not met");
 		}
@@ -253,25 +263,35 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 
 	/*
 	 * execute the special type of statement: methodCall
+	 * !! ignore the parameter to the method called
 	 */
 	@Override
 	public Integer visitMethodCall(StitchParser.MethodCallContext ctx) {
 		String id = ctx.IDENTIFIER().getText();
 		System.out.println("visitMethodCall: id is "+id);
 		// TODO: the method is hard coded, it should be from a list in the model
-		// return model.executeOperation(id); // Integer
-		if (id.equals("tacOneAction")) { // TODO: not considering argument
-			try {
-				System.out.println("!!ssh");
-				boolean connSuccess = ConnectionSSH.connect("ubuntu", "34.200.226.46", "python tacOneAction.py");
-				if (!connSuccess) {
-					System.out.println("session connection timeout, wrong IP address?");
-					return 0;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		// return model.executeOperations(id); // Integer
+
+		return model.executeOperations(id);
+	}
+
+	/*
+	 * logical AND &&; Strange though, why are the two expressions "equality" and "logicalAnd"?
+	 * quote from Stitch.g4:
+	 * logicalAndExpression
+  	 * : equalityExpression (LOGICAL_AND logicalAndExpression)?
+  	 * ;
+	 */
+	@Override
+	public Integer visitLogicalAndExpression(StitchParser.LogicalAndExpressionContext ctx) {
+		int equalityVal = visit(ctx.equalityExpression());
+		int logicalAndVal = visit(ctx.logicalAndExpression());
+		if (equalityVal == logicalAndVal) {
+			System.out.println("LogicalAndExpression: returning 1 (true)");
+			return 1;
+		} else {
+			System.out.println("LogicalAndExpression: returning 0 (false)");
+			return 0;
 		}
-		return 1;
 	}
 }
