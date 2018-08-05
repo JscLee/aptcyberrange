@@ -5,7 +5,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.Remote;
 import java.rmi.server.UnicastRemoteObject;
 import java.io.*;
-import java.util.HashMap;
+import java.util.Map;
 
 public class Server extends UnicastRemoteObject implements RmiServer {
 	
@@ -60,7 +60,8 @@ public class Server extends UnicastRemoteObject implements RmiServer {
 	} 
 
 	@Override
-	public HashMap<String, Probe> getProbe() {
+	public Map<String, Probe> getProbe() throws RemoteException {
+		System.err.println("Empty method: Server.getProbe()");
 		return null;
 	}
 }

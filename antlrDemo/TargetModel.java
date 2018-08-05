@@ -104,7 +104,7 @@ public class TargetModel implements Model {
 				e.printStackTrace();
 			} 
 		} 
-		else if (id.equals("hasLogFile")) {
+		if (id.equals("hasLogFile")) {
 			System.out.println("execHook: hasLogFile"); // has log file
 			try {
 				Integer retVal = ((FtpProbe)otherProbe.get("ftp")).checkFile("/upload/logs.txt");  
@@ -113,7 +113,7 @@ public class TargetModel implements Model {
 				e.printStackTrace();
 			}
 		} 
-		else if (id.equals("hasWebCredential")) {
+		if (id.equals("hasWebCredential")) {
 			System.out.println("execHook: hasWebCredential"); // has web credential
 			try {
 				Integer retVal = ((BlackhatProbe)otherProbe.get("blackhat")).checkFile("~/logs_decoded.txt"); 
@@ -122,11 +122,11 @@ public class TargetModel implements Model {
 				e.printStackTrace();
 			}
 		} 
-		else if (id.equals("currentTime")) {
+		if (id.equals("currentTime")) {
 			System.out.println("execHook: currentTime"); // show current time
 			return (int)System.currentTimeMillis();
 		} 
-		else if (id.equals("WEB_THRESHOLD")) {
+		if (id.equals("WEB_THRESHOLD")) {
 			System.out.println("execHook: webThreshold"); // show web server's threshold
 			return timeThresholds.get("webThreshold");
 		}
