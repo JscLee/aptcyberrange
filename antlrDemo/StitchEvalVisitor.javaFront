@@ -185,18 +185,23 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	/*
 	 * Only consider "filterEmail"
 	 * Now also consider earlier scanned tactics
-	 * TODO: success, default
 	 */
 	@Override
 	public Integer visitTacticRef(StitchParser.TacticRefContext ctx) {
 		if (ctx.IDENTIFIER() != null && ctx.IDENTIFIER().size() != 0) {
 			for (int i = 0; i < ctx.IDENTIFIER().size(); i++) {
 				String id = ctx.IDENTIFIER().get(i).getText();
+				Integer waitTime = 0;
+				if (ctx.expression() != null && ctx.expression().size() != 0) {
+					// We are only considering the first expression in the brackets @[]
+					waitTime = visit(ctx.expression(0));
+				}
+				System.out.println("visitTacticRef: waitTime is: "+waitTime.toString());
 				System.out.println("visitTacticRef: id is "+id);
 				System.out.println("visitTacticRef: lookup and run tactic "+id);
 				if (model.getTactics().containsKey(id)) {
 					System.out.println("found tactic! id: "+id);
-					int success = execTactic(id);
+					int success = execTactic(id, waitTime);
 				} else {
 					System.out.println("tactic not found! id: "+id);
 				}
@@ -215,7 +220,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	 * Execute the selected tactic
 	 * TODO: add loop on effect for time defined in tactic ref
 	 */
-	private Integer execTactic(String name) {
+	private Integer execTactic(String name, Integer waitTime) {
 		StitchParser.TacticContext ctx = model.getTactics().get(name);
 		String tacticName = ctx.IDENTIFIER().getText();
 		System.out.println("execTactic: tacticName is "+tacticName);
@@ -223,6 +228,10 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			System.out.println("execTactic: condition is true");
 			visit(ctx.action());
 			// TODO: loop on ctx.effect(), implement visitEffect()
+			int timer = 0; // in milliseconds
+			while (visit(ctx.effect()) != 1 && timer < waitTime) {
+				// 
+			}
 		} else {
 			System.out.println("execTactic: condition not met");
 		}
@@ -232,7 +241,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			e.printStackTrace();
 		}
 		
-		return 1;
+		return 0;
 	}
 
 	/*
