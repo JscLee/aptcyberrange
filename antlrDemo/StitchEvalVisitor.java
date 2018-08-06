@@ -43,15 +43,69 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	}
 
 	/*
-	 * Currently only considering variable assignment, no type check
+	 * Currently only considering variable assignment, ignores datatypes
 	 */
 	@Override
-	public Integer visitVar(StitchParser.VarContext ctx) {
+	public Integer visitVar(StitchParser.VarContext ctx) { 
 		String id = ctx.IDENTIFIER().getText();
+		System.out.println("visitVar: the expression is "+ctx.expression().getText());
 		int value = visit(ctx.expression());
 		System.out.println("visitVar putting ("+id+", "+value+")");
 		memory.put(id, value);
 		return value;
+	}
+
+	/*
+	 * (additiveExpression) > < (relationalExpression)
+	 * LT <; LE <=; GE >=; GT >;
+	 */
+	@Override
+	public Integer visitRelationalExpression(StitchParser.RelationalExpressionContext ctx) {
+		System.out.println("relational start");
+		if (ctx.additiveExpression() != null && ctx.relationalExpression() != null) {
+			int left = visit(ctx.additiveExpression());
+			int right = visit(ctx.relationalExpression());
+			System.out.println("visitRelationalExpression: left: "+left + " right: "+right);
+			if (ctx.LT() != null) {
+				System.out.println("<");
+				if (left < right) {
+					return 1;
+				} else {
+					return 0;
+				}
+			} else if (ctx.LE() != null) {
+				System.out.println("<=");
+				if (left <= right) {
+					return 1;
+				} else {
+					return 0;
+				}
+			} else if (ctx.GE() != null) {
+				System.out.println(">=");
+				if (left >= right) {
+					return 1;
+				} else {
+					return 0;
+				}
+			} else if (ctx.GT() != null) {
+				System.out.println(">");
+				if (left > right) {
+					System.out.println("returning 1");
+					return 1;
+				} else {
+					System.out.println("returning -1");
+					return -1;
+				}
+			}
+		}
+		System.out.println("relational: visitChildren");
+		Integer retVal = visitChildren(ctx);
+		if (retVal == null) {
+			System.out.println("visitRelationalExpression: return NULL");
+		} else {
+			System.out.println("visitRelationalExpression: the retVal is: "+ retVal);
+		}
+		return retVal;
 	}
 
 	/*
@@ -70,7 +124,13 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 		} else {
 			System.err.println("visitQuantifiedExpression: sentence not supported");
 		}
-		return visitChildren(ctx);
+		Integer retVal = visitChildren(ctx);
+		if (retVal == null) {
+			System.out.println("visitQuantifiedExpression: return NULL");
+		} else {
+			System.out.println("visitQuantifiedExpression: retVal is: "+ retVal);
+		}
+		return retVal;
 	}
 
 	// private String getParams()
@@ -115,7 +175,13 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			System.out.println("(INTEGER_LIT) id is "+id);
 			return Integer.valueOf(id);
 		}
-		return visitChildren(ctx);
+		Integer retVal = visitChildren(ctx);
+		if (retVal == null) {
+			System.out.println("visitIdExpression: return NULL");
+		} else {
+			System.out.println("visitIdExpression: retVal is: "+retVal);
+		}
+		return retVal;
 	}
 
 	/*
@@ -146,7 +212,13 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			int beforeInverse = visit(ctx.unaryExpression());
 			return (beforeInverse == 0)?1:0;
 		}
-		return visitChildren(ctx);
+		Integer retVal = visitChildren(ctx);
+		if (retVal == null) {
+			System.out.println("visitUnaryExpression: return NULL");
+		} else {
+			System.out.println("visitUnaryExpression: retVal: "+retVal);
+		}
+		return retVal;
 	}
 
 	/*
@@ -296,7 +368,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	 */
 	@Override
 	public Integer visitEffect(StitchParser.EffectContext ctx) {
-		System.out.println("visitEffect");
+		// System.out.println("visitEffect");
 		if (ctx.expression() == null) {
 			return 1;
 		}
@@ -347,8 +419,13 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 				System.out.println("LogicalAndExpression: returning 0 (false)");
 				return 0;
 			}
-		} else {
-			return visitChildren(ctx);
 		}
+		Integer retVal = visitChildren(ctx);
+		if (retVal == null) {
+			System.out.println("visitLogicalAndExpression: return NULL");
+		} else {
+			System.out.println("visitLogicalAndExpression: retVal is: "+retVal);
+		}
+		return retVal;
 	}
 }

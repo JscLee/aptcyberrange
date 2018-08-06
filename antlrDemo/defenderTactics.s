@@ -31,14 +31,14 @@ tactic filterEmail() {
 
 tactic changeWebPassword() {
     condition {
-         W.time > W.threshold;
+         true;
     }
     action {
         W.resetPassword(l);
         increaseWebThreshold(l); // update web server's threshold by adding 20 seconds
     }
     effect {
-        W.time < W.threshold;
+        true;
     }
 }
 
