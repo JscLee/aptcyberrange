@@ -69,8 +69,9 @@ public class StitchAttacker {
 
         // Start traversing the tree (AST) repeatedly
         int turnNum = 0;
+        final long startTime = System.currentTimeMillis();
         while(true) {
-            System.out.println("StitchAttacker: Start evaluating strategyTree, turn: "+turnNum);
+            System.out.println("StitchAttacker: Start evaluating strategyTree, iteration: "+turnNum);
             turnNum++;
             eval.visit(strategyTree); // TODO: needs to pick ONE not ALL strategies -> DONE
             if (model.checkAttackResult() == 1) {
@@ -83,5 +84,7 @@ public class StitchAttacker {
                 e.printStackTrace();
             }
         }
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Attacker takes " + (double)(endTime - startTime)/1000 + " seconds to succeed");
     }
 }

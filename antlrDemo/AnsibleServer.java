@@ -12,7 +12,7 @@ public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
 	
 	// private static String ip;
 	private static int port;
-	private static Map<String, String> ip;
+	private static Map<String, String> ip = new HashMap<>();
 	private Map<String, Probe> probe;
 
 	/*
@@ -59,6 +59,8 @@ public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
+		
+		System.out.println("args.length is "+args.length+", should be 7");
 
 		ip.put("elk", args[1]);
 		ip.put("wazuh", args[2]);
