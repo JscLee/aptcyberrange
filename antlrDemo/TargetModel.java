@@ -138,7 +138,7 @@ public class TargetModel implements Model {
 			System.out.println("execHook: hasPasswordExpired"); // time has passed above threshold
 			if ((int)System.currentTimeMillis() > timeThresholds.get("webThreshold")) {
 				int temp = timeThresholds.get("webThreshold");
-				temp += 30000;
+				temp += 60000;
 				timeThresholds.put("webThreshold", temp);
 				return 1;
 			}
@@ -162,7 +162,7 @@ public class TargetModel implements Model {
 	@Override
 	public Integer execOperations(String id) {
 		try {
-            Thread.sleep(2000); // so that consecutive operations can run successfully
+            Thread.sleep(5000); // so that consecutive operations can run successfully
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -295,7 +295,7 @@ public class TargetModel implements Model {
 		} 
 		if (id.equals("A.transaction")) {
 			try {
-				boolean conn = ConnectionSSH.connect(machine.get("ansible"), "ansible-playbook inject/transaction.yml");
+				boolean conn = ConnectionSSH.connect(machine.get("ansible"), "ansible-playbook inject/transactions.yml");
 				if (!conn) {
 					System.err.println("session connection 11 timeout, wrong IP address?");
 					return 0;
