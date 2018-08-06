@@ -24,5 +24,4 @@ public class AnsibleProbe extends Probe {
 		}
 		return otherProbe;
 	}
-
 }

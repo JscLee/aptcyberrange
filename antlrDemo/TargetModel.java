@@ -79,7 +79,7 @@ public class TargetModel implements Model {
 	public Integer checkAttackResult() {
 		System.out.println("check attack result"); // has transactions file
 		try {
-			Integer retVal = ((FtpProbe)otherProbe.get("ftp")).checkFile("/upload/transactions.txt");  
+			Integer retVal = ((FtpProbe)otherProbe.get("ftp")).checkFile("/var/ftp/upload/transactions.txt");  
 			return retVal; 
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -95,8 +95,8 @@ public class TargetModel implements Model {
 		if (id.equals("hasCardCredential")) {
 			System.out.println("execHook: hasCardCredential"); // has card credential
 			try {
-				Integer retVal = ((BlackhatProbe)otherProbe.get("blackhat")).checkFile("~/passwd") + 
-							 ((BlackhatProbe)otherProbe.get("blackhat")).checkFile("~/shadow");
+				Integer retVal = ((BlackhatProbe)otherProbe.get("blackhat")).checkFile("/home/ubuntu/passwd") + 
+							 ((BlackhatProbe)otherProbe.get("blackhat")).checkFile("/home/ubuntu/shadow");
 				if (retVal != 2) {
 					return 0;  
 				} 
@@ -108,7 +108,7 @@ public class TargetModel implements Model {
 		if (id.equals("hasLogFile")) {
 			System.out.println("execHook: hasLogFile"); // has log file
 			try {
-				Integer retVal = ((FtpProbe)otherProbe.get("ftp")).checkFile("/upload/logs.txt");  
+				Integer retVal = ((FtpProbe)otherProbe.get("ftp")).checkFile("/var/ftp/upload/logs.txt");  
 				return retVal; 
 			} catch (RemoteException e) {
 				e.printStackTrace();
@@ -117,7 +117,7 @@ public class TargetModel implements Model {
 		if (id.equals("hasWebCredential")) {
 			System.out.println("execHook: hasWebCredential"); // has web credential
 			try {
-				Integer retVal = ((BlackhatProbe)otherProbe.get("blackhat")).checkFile("~/logs_decoded.txt"); 
+				Integer retVal = ((BlackhatProbe)otherProbe.get("blackhat")).checkFile("/home/ubuntu/logs_decoded.txt"); 
 				return retVal; 
 			} catch (RemoteException e) {
 				e.printStackTrace();
