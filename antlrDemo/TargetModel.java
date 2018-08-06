@@ -138,7 +138,7 @@ public class TargetModel implements Model {
 			System.out.println("execHook: hasPasswordExpired"); // time has passed above threshold
 			if ((int)System.currentTimeMillis() > timeThresholds.get("webThreshold")) {
 				int temp = timeThresholds.get("webThreshold");
-				temp += 60000;
+				temp += 20000;
 				timeThresholds.put("webThreshold", temp);
 				return 1;
 			}
@@ -162,7 +162,7 @@ public class TargetModel implements Model {
 	@Override
 	public Integer execOperations(String id) {
 		try {
-            Thread.sleep(5000); // so that consecutive operations can run successfully
+            Thread.sleep(3000); // so that consecutive operations can run successfully
         } catch (Exception e) {
             e.printStackTrace();
         }
