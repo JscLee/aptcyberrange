@@ -26,6 +26,7 @@ public class TargetModel implements Model {
 		hooks.add("hasWebCredential");
 		hooks.add("hasCardCredential");
 		hooks.add("hasLogFile");
+		hooks.add("hasCardPassword");
 		// hooks.add("suspicious"); // removed
 		hooks.add("currentTime");
 		hooks.add("WEB_THRESHOLD");
@@ -104,6 +105,15 @@ public class TargetModel implements Model {
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			} 
+		} 
+		if (id.equals("hasCardPassword")) {
+			System.out.println("execHook: hasCardPassword"); // has card password
+			try {
+				Integer retVal = ((BlackhatProbe)otherProbe.get("blackhat")).checkFile("/home/ubuntu/cracked_passwd");
+				return retVal; 
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
 		} 
 		if (id.equals("hasLogFile")) {
 			System.out.println("execHook: hasLogFile"); // has log file
