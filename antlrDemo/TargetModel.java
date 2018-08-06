@@ -27,9 +27,10 @@ public class TargetModel implements Model {
 		hooks.add("hasCardCredential");
 		hooks.add("hasLogFile");
 		hooks.add("hasCardPassword");
+		hooks.add("webPasswdExpired");
 		// hooks.add("suspicious"); // removed
-		hooks.add("currentTime");
-		hooks.add("WEB_THRESHOLD");
+// 		hooks.add("currentTime");
+// 		hooks.add("WEB_THRESHOLD");
 
 		System.out.println("Creating probe...");
 		ansibleProbe = new AnsibleProbe(machine.get("ansible"), 15213); // magic number for port, hardcode ansible server
@@ -132,15 +133,19 @@ public class TargetModel implements Model {
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-		} 
-		if (id.equals("currentTime")) {
-			System.out.println("execHook: currentTime"); // show current time
-			return (int)System.currentTimeMillis();
-		} 
-		if (id.equals("WEB_THRESHOLD")) {
-			System.out.println("execHook: webThreshold"); // show web server's threshold
-			return timeThresholds.get("webThreshold");
 		}
+		if (id.equals("webPasswordExpired")) {
+			System.out.println("execHook: hasPasswordExpired"); // time has passed above threshold
+			return (int)System.currentTimeMillis() > timeThresholds.get("webThreshold");
+		}
+// 		if (id.equals("currentTime")) {
+// 			System.out.println("execHook: currentTime"); // show current time
+// 			return (int)System.currentTimeMillis();
+// 		} 
+// 		if (id.equals("WEB_THRESHOLD")) {
+// 			System.out.println("execHook: webThreshold"); // show web server's threshold
+// 			return timeThresholds.get("webThreshold");
+// 		}
 		System.err.println("execHook: name of hook cannot be found");
 		return -1;
 	}
