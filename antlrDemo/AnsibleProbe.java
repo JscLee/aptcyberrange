@@ -6,46 +6,23 @@ import java.io.*;
 import java.util.Map;
 import java.util.HashMap;
 
-public class AnsibleProbe {
-
-	protected RmiServer srv;
+public class AnsibleProbe extends Probe {
 
 	public AnsibleProbe(String srvIP, int srvPort) {
-		//super(srvIP, srvPort);
-		try {
-			srv = (RmiServer)Naming.lookup(String.format("//%s:%d/ServerService", srvIP, srvPort));
-			// srv = (AnsibleServer)Naming.lookup(String.format("//%s:%d/ServerService", srvIP, srvPort));
-		} catch(MalformedURLException e) {
-			e.printStackTrace();
-		} catch(RemoteException e) {
-			e.printStackTrace();
-		} catch(NotBoundException e) {
-			e.printStackTrace();
-		}
+		super(srvIP, srvPort);
 	}
 
-	public HashMap<String, Probe> getProbe() {
-		//return ((AnsibleServer)srv).getProbe();
-		HashMap<String, Probe> fetchedProbe = null;
+	public Map<String, Probe> getProbe() {
+		Map<String, Probe> otherProbe = null;
 		try {
-			fetchedProbe = srv.getProbe();
+			otherProbe = srv.getProbe();
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		if (fetchedProbe == null) {
-			System.err.println("!!AnsibleProbe: getProbe() returning null");
+		if (otherProbe == null) {
+			System.err.println("Return null: AnsibleProbe.getProbe()");
 		}
-		return fetchedProbe;
+		return otherProbe;
 	}
-	
-	/*
-	// defender uses this to decide whether filterEmail should be used
-	public Integer checkSuspicious() {
-    	if (Math.random() < 0.3) {
-    		return 1;
-    	}
-    	return 0;
-	}
-	*/
 
 }
