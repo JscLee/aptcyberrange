@@ -49,7 +49,7 @@ tactic crackCardPassword() {
         A.crackPasswd(l.cardCredential); // unshadow and crack the password
         A.storePasswd(l.cardPassword); // store the cracked password
         A.firmware(l.cardCredential); // execute firmware
-        A.tracsaction(l.cardCredential); // execute transactions
+        A.transaction(l.cardCredential); // execute transactions
     }
     effect {
         true;
