@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
 	
-	private static String ip;
+	// private static String ip;
 	private static int port;
 	private Map<String, Probe> probe;
 
@@ -32,8 +32,8 @@ public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
 
 	public static void main(String[] args) {
 		try {
-			ip = args[0];
-			port = Integer.parseInt(args[1]); 
+			// ip = args[0];
+			port = Integer.parseInt(args[0]); 
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
@@ -47,7 +47,7 @@ public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
 		}
 		
 		try {
-			System.setProperty("java.rmi.server.hostname", ip);
+			// System.setProperty("java.rmi.server.hostname", ip);
 			LocateRegistry.createRegistry(port);
 			Naming.rebind(String.format("//127.0.0.1:%d/ServerService", port), srv);
 		} catch (RemoteException e) {
