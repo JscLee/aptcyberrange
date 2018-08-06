@@ -307,7 +307,10 @@ class Build(Command):
                 print("Excluding file: " + filename)
             
             id_begin = result.find("amazon-ebs: AMI: ami-") + 17
-            id_end = result.find("amazon-ebs: AMI: ami-") + 29
+            # for short AMI ids (ami-12345678)
+            # id_end = result.find("amazon-ebs: AMI: ami-") + 29
+            # for long AMI ids (ami-'17digits')
+            id_end = result.find("amazon-ebs: AMI: ami-") + 38
             ami_list.append([os.path.splitext(filename)[0], result[id_begin:id_end]])
         for row in ami_list:
             if 'ami' not in row[1]:
