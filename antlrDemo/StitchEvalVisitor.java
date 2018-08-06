@@ -82,7 +82,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	 */
 	@Override
 	public Integer visitIdExpression(StitchParser.IdExpressionContext ctx) {
-		System.out.println("visitIdExpression called");
+		// System.out.println("visitIdExpression called");
 		if(ctx.FALSE() != null) {
 			String id = ctx.FALSE().getText();
 			System.out.println("(FALSE) id is "+id);
@@ -105,14 +105,15 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			int ret = memory.getOrDefault(id, -1);
 			if (ret == -1) {
 				throw new RuntimeException("visitIDExpression: identifier not defined");
-			}
-			// CASE 3: variable is a number (if the first char of the String is a number)
-			if (Character.isDigit(id.charAt(0))) {
-				return Integer.valueOf(id);
 			} else {
 				System.out.println("variable defined earlier, returning "+ret);
 				return ret;
 			}
+		}
+		if (ctx.INTEGER_LIT() != null) {
+			String id = ctx.INTEGER_LIT().getText();
+			System.out.println("(INTEGER_LIT) id is "+id);
+			return Integer.valueOf(id);
 		}
 		return visitChildren(ctx);
 	}
@@ -192,11 +193,19 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 		if (ctx.IDENTIFIER() != null && ctx.IDENTIFIER().size() != 0) {
 			for (int i = 0; i < ctx.IDENTIFIER().size(); i++) {
 				String id = ctx.IDENTIFIER().get(i).getText();
+				Integer waitTime = 0;
+				System.out.println("visitTacticRef: before, waitTime is "+waitTime);
+				if (ctx.expression() != null && ctx.expression().size() != 0) {
+					// We are only considering the first expression in the brackets @[]
+					System.out.println("whoami: "+ctx.expression(0).getText());
+					waitTime = visit(ctx.expression(0));
+				}
+				System.out.println("visitTacticRef: waitTime is "+waitTime);
 				System.out.println("visitTacticRef: id is "+id);
 				System.out.println("visitTacticRef: lookup and run tactic "+id);
 				if (model.getTactics().containsKey(id)) {
 					System.out.println("found tactic! id: "+id);
-					int success = execTactic(id);
+					int success = execTactic(id, waitTime);
 				} else {
 					System.out.println("tactic not found! id: "+id);
 				}
@@ -212,10 +221,10 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	}
 
 	/*
-	 * Execute the selected tactic
+	 * Helper function to execute the selected tactic
 	 * TODO: add loop on effect for time defined in tactic ref
 	 */
-	private Integer execTactic(String name) {
+	private Integer execTactic(String name, Integer waitTime) {
 		StitchParser.TacticContext ctx = model.getTactics().get(name);
 		String tacticName = ctx.IDENTIFIER().getText();
 		System.out.println("execTactic: tacticName is "+tacticName);
@@ -223,15 +232,30 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			System.out.println("execTactic: condition is true");
 			visit(ctx.action());
 			// TODO: loop on ctx.effect(), implement visitEffect()
+			int timer = 0; // in milliseconds
+			while (true) {
+				int allTrue = visit(ctx.effect());
+				System.out.println("allTrue is "+allTrue);
+				if (allTrue == 1 || timer >= waitTime) {
+					break;
+				}
+				// wait for the post condition to become true
+				timer += 1000;
+				try { // sleep for a while, wait for the magic to happen
+					Thread.sleep(1000);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			if (visit(ctx.effect()) != 1) {
+				System.out.println("execTactic: effect time out! (effect possibly false)");
+			} else {
+				System.out.println("execTactic: effect is true");
+			}
 		} else {
 			System.out.println("execTactic: condition not met");
 		}
-		try {
-			Thread.sleep(1000);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+
 		return 1;
 	}
 
@@ -257,6 +281,36 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 		for (int i = 0; i < ctx.statement().size(); i++) {
 			System.out.println("visitAction: visiting statement("+i+")");
 			visit(ctx.statement(i));
+		}
+		return 1;
+	}
+
+	/*
+	 * Examine the post-condition/effect of a tactic
+	 * !! important note, the grammar (Stitch.g4) seems to support a @[5000] tag here in
+	 * the Effect section of the Stitch tactic.
+	 * However, we will ignore all @[<someNumber>] tag in this section, because it seems to
+	 * be redundant here.
+	 *
+	 * return: 1 (true), 0 (false)
+	 */
+	@Override
+	public Integer visitEffect(StitchParser.EffectContext ctx) {
+		System.out.println("visitEffect");
+		if (ctx.expression() == null) {
+			return 1;
+		}
+		for (int i = 0; i < ctx.expression().size(); i++) {
+			System.out.println("visitEffect: visiting expression("+i+")");
+			Integer singleEffect = visit(ctx.expression(i));
+			System.out.println("visitEffect: got singleEffect:"+singleEffect);
+			if (singleEffect == 0) {
+				return 0;
+			} else if (singleEffect == 1) {
+				continue;
+			} else {
+				// ignore non-boolean expressions, as seen in @[5000] tags
+			}
 		}
 		return 1;
 	}
