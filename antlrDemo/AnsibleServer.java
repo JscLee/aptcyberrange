@@ -12,6 +12,7 @@ public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
 	
 	// private static String ip;
 	private static int port;
+	private static Map<String, String> ip;
 	private Map<String, Probe> probe;
 
 	/*
@@ -20,26 +21,32 @@ public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
 	public AnsibleServer() throws RemoteException {
 		super();
 		probe = new HashMap<String, Probe>();
-		probe.put("elk", new ElkProbe("54.166.147.172", 15214));
+		probe.put("elk", new ElkProbe(ip.get("elk"), 15214));
 		// probe.put("elk", new ElkProbe("10.0.0.11", 15214));
 		System.out.println("elk online");
-		probe.put("wazuh", new WazuhProbe("52.86.183.203", 15214));
+
+		probe.put("wazuh", new WazuhProbe(ip.get("wazuh"), 15214));
 		// probe.put("wazuh", new WazuhProbe("10.0.0.12", 15214));
 		System.out.println("wazuh online");
-		probe.put("contractor", new ContractorProbe("54.162.92.101", 15214));
+
+		probe.put("contractor", new ContractorProbe(ip.get("contractor"), 15214));
 		// probe.put("contractor", new ContractorProbe("10.0.0.14", 15214));
 		System.out.println("contractor online");
-		probe.put("mail", new MailProbe("52.91.147.224", 15214));
+
+		probe.put("mail", new MailProbe(ip.get("mail"), 15214));
 		// probe.put("mail", new MailProbe("10.0.0.15", 15214));
 		System.out.println("mail online");
+
 //		probe.put("web", new WebProbe("54.162.0.198", 15214));
 //		System.out.println("web online");
-		probe.put("blackhat", new BlackhatProbe("18.210.15.175", 15214));
+		probe.put("blackhat", new BlackhatProbe(ip.get("blackhat"), 15214));
 		// probe.put("blackhat", new BlackhatProbe("10.0.0.18", 15214));
 		System.out.println("blackhat online");
-		probe.put("ftp", new FtpProbe("34.229.56.58", 15214));
+
+		probe.put("ftp", new FtpProbe(ip.get("ftp"), 15214));
 		// probe.put("ftp", new FtpProbe("10.0.0.19", 15214));
 		System.out.println("ftp online");
+
 //		probe.put("payments", new PaymentsProbe("34.202.233.15", 15214));
 //		System.out.println("payments online");
 		System.out.println("All servers online");
@@ -52,6 +59,13 @@ public class AnsibleServer extends UnicastRemoteObject implements RmiServer {
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
+
+		ip.put("elk", args[1]);
+		ip.put("wazuh", args[2]);
+		ip.put("contractor", args[3]);
+		ip.put("mail", args[4]);
+		ip.put("blackhat", args[5]);
+		ip.put("ftp", args[6]);
 
 		AnsibleServer srv = null;
 		try {
