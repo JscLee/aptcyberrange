@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import org.json.*;
 
-public class Stitch {
+public class StitchDefender {
 
     public static void main(String[] args) throws Exception {
         if (args.length != 2) {
@@ -65,19 +65,18 @@ public class Stitch {
 
         Model model = manager.spawnModel();
 
-        System.out.println("Stitch: Start evaluating strategyTree");
-
         StitchEvalVisitor eval = new StitchEvalVisitor(model,args[0]);
 
         // Start traversing the tree (AST) repeatedly
-        //while(true) {
-            // TODO: add a probe, rpc or remote access
-            eval.visit(strategyTree); // TODO: needs to pick ONE not ALL strategies
-        //    try {
-        //        Thread.sleep(1000);
-        //    } catch (Exception e) {
-        //        e.printStackTrace();
-        //    }
-        //}
+        int turnNum = 0;
+        System.out.println("StitchDefender: Start evaluating strategyTree, turn: "+turnNum);
+        while(true) {
+            eval.visit(strategyTree); // TODO: needs to pick ONE not ALL strategies -> DONE
+            try {
+                Thread.sleep(1000); // so that attacker is easier to succeed
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

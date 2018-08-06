@@ -59,7 +59,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	 * (additiveExpression) > < (relationalExpression)
 	 * LT <; LE <=; GE >=; GT >;
 	 */
-	@Override
+	/*@Override
 	public Integer visitRelationalExpression(StitchParser.RelationalExpressionContext ctx) {
 		System.out.println("relational start");
 		if (ctx.additiveExpression() != null && ctx.relationalExpression() != null) {
@@ -93,8 +93,8 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 					System.out.println("returning 1");
 					return 1;
 				} else {
-					System.out.println("returning -1");
-					return -1;
+					System.out.println("returning 0");
+					return 0;
 				}
 			}
 		}
@@ -106,7 +106,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 			System.out.println("visitRelationalExpression: the retVal is: "+ retVal);
 		}
 		return retVal;
-	}
+	}*/
 
 	/*
 	 * only useful for a List of Mail (type) objects
