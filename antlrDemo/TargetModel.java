@@ -136,7 +136,13 @@ public class TargetModel implements Model {
 		}
 		if (id.equals("webPasswordExpired")) {
 			System.out.println("execHook: hasPasswordExpired"); // time has passed above threshold
-			return (int)System.currentTimeMillis() > timeThresholds.get("webThreshold");
+			if ((int)System.currentTimeMillis() > timeThresholds.get("webThreshold")) {
+				int temp = timeThresholds.get("webThreshold");
+				temp += 10000;
+				timeThresholds.put("webThreshold", temp);
+				return 1;
+			}
+			else return 0;
 		}
 // 		if (id.equals("currentTime")) {
 // 			System.out.println("execHook: currentTime"); // show current time
