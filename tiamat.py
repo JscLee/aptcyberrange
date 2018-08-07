@@ -469,9 +469,23 @@ class Launch(Command):
                            "-".join(state.ip[server].split('.')) + ".compute-1.amazonaws.com Server 15214 &"
                     child.sendline(call)
                     child.expect('ubuntu@')
+                    time.sleep(1)
+                    child.sendline('ps -eo pid,lstart,cmd | grep java')
+                    flag = child.expect(['amazonaws', 'ubuntu@'])
+                    if flag != 0:
+                        child.sendline(call)
+                        child.expect('ubuntu@')
+                        time.sleep(1)
+                        child.sendline('ps -eo pid,lstart,cmd | grep java')
+                        flag = child.expect(['amazonaws', 'ubuntu@'])
+                        if flag == 0:
+                            print("Launch java server on " + server + " successfully")
+                        else:
+                            print("Launch java server on " + server + " unsuccessfully")
+                    else:
+                        print("Launch java server on " + server + " successfully")
                     child.sendline('logout')
                     child.close()
-                    print("Launch java server on " + server + " successfully")
             
             time.sleep(10)
 
@@ -495,11 +509,26 @@ class Launch(Command):
                 else:
                     call += ' ' + state.ip[server]
             call += ' &'
+
             child.sendline(call)
             child.expect('ubuntu@')
+            time.sleep(1)
+            child.sendline('ps -eo pid,lstart,cmd | grep java')
+            flag = child.expect(['amazonaws', 'ubuntu@'])
+            if flag != 0:
+                child.sendline(call)
+                child.expect('ubuntu@')
+                time.sleep(1)
+                child.sendline('ps -eo pid,lstart,cmd | grep java')
+                flag = child.expect(['amazonaws', 'ubuntu@'])
+                if flag == 0:
+                    print("Launch java server on ansible successfully")
+                else:
+                    print("Launch java server on ansible unsuccessfully")
+            else:
+                print("Launch java server on ansible successfully")
             child.sendline('logout')
             child.close()
-            print("Launch java server on ansible successfully")
 
             ssh_call = "ssh -i key ubuntu@" + state.ip["contractor"]
             child = pexpect.spawn(ssh_call)

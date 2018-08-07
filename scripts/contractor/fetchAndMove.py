@@ -7,16 +7,16 @@ import random
 import os
 
 if __name__ == '__main__':
-    
-    try:
-        with open('mailpath.txt') as f:
-            path = f.readline().strip()
-            if path[-1] != '/':
-                path = path + '/'
-    except:
-        path = '/home/ubuntu/mail/new/'
 
     while True:
+        try:
+            with open('mailpath.txt') as f:
+                path = f.readline().strip()
+                if path[-1] != '/':
+                    path = path + '/'
+        except:
+            path = '/home/ubuntu/mail/new/'
+
         time.sleep(1)
 
         fetcher = Popen(["fetchmail"], stdout=PIPE, stderr=PIPE)
