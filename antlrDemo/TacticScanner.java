@@ -33,7 +33,7 @@ public class TacticScanner extends StitchBaseVisitor<Integer> {
 		}
 		String modelName = ctx.STRING_LIT().getText();
 		String cleanModelName = modelName.substring(1, modelName.length()-1);
-		System.out.println("visitImportSt: cleanModelName: "+cleanModelName);
+		// System.out.println("visitImportSt: cleanModelName: "+cleanModelName);
 		manager.initModel(cleanModelName, tmpMap);
 		model = manager.spawnModel();
 		return 1;
@@ -46,9 +46,9 @@ public class TacticScanner extends StitchBaseVisitor<Integer> {
 	@Override
 	public Integer visitTactic(StitchParser.TacticContext ctx) {
 		String tacticName = ctx.IDENTIFIER().getText();
-		System.out.println("TacticScanner: visitTactic: tacticName is "+tacticName);
+		// System.out.println("TacticScanner: visitTactic: tacticName is "+tacticName);
 		model.addTactic(tacticName, ctx);
-		System.out.println("TacticScanner: Tactic Added");
+		System.out.println("TacticScanner: Tactic: '"+tacticName+"' Added");
 		return 1;
 	}
 

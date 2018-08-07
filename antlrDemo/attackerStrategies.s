@@ -32,7 +32,7 @@ strategy WebCredentialStrategy
 // the shell on web server.
 strategy ShellInjectionStrategy
 [hasWebCredential && !hasCardCredential] {
-    t0: (!hasCardCredential) -> shellInjection() @[5000] {
+    t0: (!hasCardCredential) -> shellInjection() @[20000] {
         t1: (hasCardCredential) -> done;
         t1a: (!hasCardCredential) -> deleteFiles() @[5000] {
             t2a: (hasCardCredential) -> done;
@@ -45,7 +45,7 @@ strategy ShellInjectionStrategy
 // crack the password from LDAP.
 strategy CrackPasswordStrategy
 [hasCardCredential] {
-    t0: (hasCardCredential) -> crackCardPassword() @[5000] {
+    t0: (hasCardCredential) -> crackCardPassword() @[10000] {
         t1: (hasCardPassword) -> done;
         t1a: (!hasCardPassword) -> TNULL;
     }

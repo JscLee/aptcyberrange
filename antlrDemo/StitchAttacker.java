@@ -51,7 +51,7 @@ public class StitchAttacker {
 
         // for testing purpose only
         for (Map.Entry<String, String> entry : serverIP.entrySet()) {
-            System.out.println("server: "+entry.getKey()+", ip:"+entry.getValue());
+            System.out.println("server: "+entry.getKey()+", ip: "+entry.getValue());
         }
 
         ModelManager manager = new ModelManager();

@@ -52,7 +52,7 @@ tactic crackCardPassword() {
         A.transaction(l.cardCredential); // execute transactions
     }
     effect {
-        true;
+        hasTransaction;
     }
 }
 

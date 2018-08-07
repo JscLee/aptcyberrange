@@ -28,6 +28,7 @@ public class TargetModel implements Model {
 		hooks.add("hasLogFile");
 		hooks.add("hasCardPassword");
 		hooks.add("webPasswdExpired");
+		hooks.add("hasTransaction");
 		// hooks.add("suspicious"); // removed
 // 		hooks.add("currentTime");
 // 		hooks.add("WEB_THRESHOLD");
@@ -37,15 +38,15 @@ public class TargetModel implements Model {
 		// ansibleProbe = new AnsibleProbe("128.2.220.18", 15213);
 		System.out.println("probe created");
 		otherProbe = ansibleProbe.getProbe();
-		System.out.println("ansibleProbe.getProbe() complete");
+		// System.out.println("ansibleProbe.getProbe() complete");
 
 		int webThreshold = (int) System.currentTimeMillis() + 20000;
 		
 		timeThresholds.put("webThreshold", webThreshold);
 		int paymentThreshold = (int) System.currentTimeMillis() + 40000;
 		timeThresholds.put("paymentThreshold", paymentThreshold);
-		System.out.println("webThreshold: " + webThreshold);
-		System.out.println("paymentThreshold: " + paymentThreshold);
+		//System.out.println("webThreshold: " + webThreshold);
+		//System.out.println("paymentThreshold: " + paymentThreshold);
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public class TargetModel implements Model {
 	@Override
 	public void addTactic(String name, StitchParser.TacticContext tree) {
 		tactics.put(name, tree);
-		System.out.println("Model: adding new tactic, name: "+name);
+		// System.out.println("Model: adding new tactic, name: "+name);
 	}
 
 	@Override
@@ -95,7 +96,7 @@ public class TargetModel implements Model {
 	@Override
 	public Integer execHook(String id) {
 		if (id.equals("hasCardCredential")) {
-			System.out.println("execHook: hasCardCredential"); // has card credential
+			// System.out.println("execHook: hasCardCredential"); // has card credential
 			try {
 				Integer retVal = ((BlackhatProbe)otherProbe.get("blackhat")).checkFile("/home/ubuntu/passwd") + 
 							 ((BlackhatProbe)otherProbe.get("blackhat")).checkFile("/home/ubuntu/shadow");
@@ -108,7 +109,7 @@ public class TargetModel implements Model {
 			} 
 		} 
 		if (id.equals("hasCardPassword")) {
-			System.out.println("execHook: hasCardPassword"); // has card password
+			// System.out.println("execHook: hasCardPassword"); // has card password
 			try {
 				Integer retVal = ((BlackhatProbe)otherProbe.get("blackhat")).checkFile("/home/ubuntu/cracked_passwd");
 				return retVal; 
@@ -117,7 +118,7 @@ public class TargetModel implements Model {
 			}
 		} 
 		if (id.equals("hasLogFile")) {
-			System.out.println("execHook: hasLogFile"); // has log file
+			// System.out.println("execHook: hasLogFile"); // has log file
 			try {
 				Integer retVal = ((FtpProbe)otherProbe.get("ftp")).checkFile("/var/ftp/upload/logs.txt");  
 				return retVal; 
@@ -126,7 +127,7 @@ public class TargetModel implements Model {
 			}
 		} 
 		if (id.equals("hasWebCredential")) {
-			System.out.println("execHook: hasWebCredential"); // has web credential
+			// System.out.println("execHook: hasWebCredential"); // has web credential
 			try {
 				Integer retVal = ((BlackhatProbe)otherProbe.get("blackhat")).checkFile("/home/ubuntu/logs_decoded.txt"); 
 				return retVal; 
@@ -135,14 +136,23 @@ public class TargetModel implements Model {
 			}
 		}
 		if (id.equals("webPasswdExpired")) {
-			System.out.println("execHook: hasPasswordExpired"); // time has passed above threshold
+			// System.out.println("execHook: hasPasswordExpired"); // time has passed above threshold
 			if ((int)System.currentTimeMillis() > timeThresholds.get("webThreshold")) {
-				int temp = timeThresholds.get("webThreshold");
-				temp += 20000;
-				timeThresholds.put("webThreshold", temp);
+				//int temp = timeThresholds.get("webThreshold");
+				//temp += 20000;
+				//timeThresholds.put("webThreshold", temp);
 				return 1;
 			}
 			else return 0;
+		}
+		if (id.equals("hasTransaction")) {
+			try {
+				Integer retVal = ((FtpProbe)otherProbe.get("ftp")).checkFile("/var/ftp/upload/transactions.txt");  
+				return retVal; 
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+			return -1;
 		}
 // 		if (id.equals("currentTime")) {
 // 			System.out.println("execHook: currentTime"); // show current time
@@ -162,14 +172,15 @@ public class TargetModel implements Model {
 	@Override
 	public Integer execOperations(String id) {
 		try {
-            Thread.sleep(3000); // so that consecutive operations can run successfully
+            Thread.sleep(2300); // so that consecutive operations can run successfully
         } catch (Exception e) {
             e.printStackTrace();
         }
 		if (id.equals("increaseWebThreshold")) {
 			int webThreshold = timeThresholds.get("webThreshold");
-			webThreshold += 2000;
+			webThreshold += 20000; // hard coded 20s
 			timeThresholds.put("webThreshold", webThreshold);
+			System.out.println("webThreshold increased by 20s");
 		} 
 		if (id.equals("filterPhishingEmail")) {
 			try {

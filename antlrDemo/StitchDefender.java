@@ -69,8 +69,11 @@ public class StitchDefender {
 
         // Start traversing the tree (AST) repeatedly
         int turnNum = 0;
-        System.out.println("StitchDefender: Start evaluating strategyTree, turn: "+turnNum);
+        
         while(true) {
+            System.out.print("\n");
+            System.out.println("StitchDefender: Start evaluating strategyTree, iteration: "+turnNum);
+            turnNum++;
             eval.visit(strategyTree); // TODO: needs to pick ONE not ALL strategies -> DONE
             try {
                 Thread.sleep(1000); // so that attacker is easier to succeed
