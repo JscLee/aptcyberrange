@@ -27,3 +27,4 @@
   roles:
    - { role: wazuh_server }
    - { role: filebeat2 }
+   - { role: java }

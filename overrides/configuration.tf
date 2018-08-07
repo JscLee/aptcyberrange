@@ -50,7 +50,7 @@ resource "aws_route53_zone" "terraform" {
 
 resource "aws_security_group" "terraform" {
   name = "terraform"
-  description = "only allow ssh, http, https"
+  description = "Allow all using ports"
   vpc_id = "${aws_vpc.terraform.id}"
   depends_on = ["aws_vpc.terraform"]
 
@@ -82,6 +82,34 @@ resource "aws_security_group" "terraform" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress = {
+    from_port = 1099
+    to_port = 1099
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress = {
+    from_port = 35536
+    to_port = 45000
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress = {
+    from_port = 15000
+    to_port = 15500
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress = {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port       = 0
     to_port         = 0
@@ -91,7 +119,7 @@ resource "aws_security_group" "terraform" {
 }
 
 resource "aws_instance" "ansible" {
-  ami = "ami-01c6fc8c57cf28b40"
+  ami = "ami-0ef1f52ef8709053e"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"

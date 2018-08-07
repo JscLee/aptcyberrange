@@ -17,6 +17,11 @@
   }],
   "provisioners": [
     {
+      "type": "file",
+      "source": "../scripts/java/",
+      "destination": "/home/ubuntu"
+    },
+    {
       "type": "shell",
       "inline": [
         "sudo apt-add-repository ppa:ansible/ansible -y",
@@ -30,7 +35,8 @@
       "playbook_file": "../ansible/install/ldap.yml",
       "playbook_dir": "../ansible",
       "role_paths": [
-        "../ansible/install/roles/slapd"
+        "../ansible/install/roles/slapd", 
+        "../ansible/install/roles/java"
       ]
     }
   ]

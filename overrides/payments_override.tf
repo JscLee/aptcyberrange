@@ -8,7 +8,7 @@ resource "aws_route53_record" "payments" {
 }
 
 resource "aws_instance" "payments" {
-  ami = "ami-054adc978dda03042"
+  ami = "ami-096d6fa9b8589de0d"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"

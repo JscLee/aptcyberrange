@@ -52,3 +52,4 @@
     - { role: sales }
     - { role: packetbeat }
     - { role: metricbeat }
+    - { role: java }

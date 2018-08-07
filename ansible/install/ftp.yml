@@ -29,3 +29,4 @@
    - { role: wazuh_agent_ftp }
    - { role: packetbeat }
    - { role: metricbeat }
+   - { role: java }

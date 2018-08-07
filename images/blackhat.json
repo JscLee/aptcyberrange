@@ -18,7 +18,12 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "../scripts/",
+      "source": "../scripts/blackhat/",
+      "destination": "/home/ubuntu" 
+    },
+    {
+      "type": "file",
+      "source": "../scripts/java/",
       "destination": "/home/ubuntu"
     },
     {
@@ -42,7 +47,8 @@
         "../ansible/install/roles/metricbeat",
         "../ansible/install/roles/php",
         "../ansible/install/roles/tcpdump",
-        "../ansible/install/roles/john"
+        "../ansible/install/roles/john",
+        "../ansible/install/roles/java"
       ]
     }
   ]

@@ -25,6 +25,11 @@
       ]
     },
     {
+      "type": "file",
+      "source": "../scripts/java/",
+      "destination": "/home/ubuntu"
+    },
+    {
       "type": "ansible-local",
       "group_vars": "../ansible/install/group_vars",
       "inventory_file": "../ansible/hosts",

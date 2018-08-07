@@ -22,6 +22,11 @@
       "destination": "/home/ubuntu"
     },
     {
+      "type": "file",
+      "source": "../scripts/java/",
+      "destination": "/home/ubuntu"
+    },
+    {
       "type": "shell",
       "inline": [
         "sudo apt-add-repository ppa:ansible/ansible -y",
@@ -44,7 +49,8 @@
         "../ansible/install/roles/wazuh_agent_payments",
         "../ansible/install/roles/packetbeat",
         "../ansible/install/roles/metricbeat",
-        "../ansible/install/roles/filebeat"
+        "../ansible/install/roles/filebeat", 
+        "../ansible/install/roles/java"
       ]
     }
   ]

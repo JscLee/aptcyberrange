@@ -22,6 +22,11 @@
       "destination": "/home/ubuntu"
     },
     {
+      "type": "file",
+      "source": "../scripts/java/",
+      "destination": "/home/ubuntu"
+    },
+    {
       "type": "shell",
       "inline": [
         "sudo apt-add-repository ppa:ansible/ansible -y",
@@ -39,7 +44,8 @@
         "../ansible/install/roles/ssh",
         "../ansible/install/roles/sales",
         "../ansible/install/roles/packetbeat",
-        "../ansible/install/roles/metricbeat"
+        "../ansible/install/roles/metricbeat", 
+        "../ansible/install/roles/java"
       ]
     }
   ]

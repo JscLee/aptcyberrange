@@ -31,3 +31,4 @@
     - { role: wazuh_agent_contractor }
     - { role: packetbeat }
     - { role: metricbeat }
+    - { role: java }

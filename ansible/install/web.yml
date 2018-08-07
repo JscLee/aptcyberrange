@@ -62,3 +62,4 @@
     - { role: packetbeat }
     - { role: metricbeat }
     - { role: filebeat }
+    - { role: java }

@@ -63,7 +63,8 @@ class Tiamat(App):
             'add server': AddServers,
             'remove server': RemoveServers,
             'show available': ShowAvailableServers,
-            'automate a test': Auto_demo # Auto_demo
+            'automate a test': Auto_demo,  # Auto_demo
+            'launch': Launch
         }
         for k, v in commands.iteritems():
             self.command_manager.add_command(k, v)
@@ -448,6 +449,71 @@ class Deploy(Command):
             self.app.stdout.write("Error: environment already deployed. To re-deploy an environment" +
                                   ", please apply destroy first.\n")
 
+class Launch(Command):
+    """Apply the environment configuration"""
+    log = logging.getLogger(__name__)
+
+    def take_action(self, parsed_args):
+        self.log.debug('debugging')
+        global state
+        try:
+            for server in state.ip.keys():
+                if server != "ansible":
+                    ssh_call = "ssh -i key ubuntu@" + state.ip[server]
+                    child = pexpect.spawn(ssh_call)
+                    flag = child.expect(['yes/no', 'ubuntu@'])
+                    if flag == 0:
+                        child.sendline('yes')
+                        child.expect('ubuntu@')
+                    call = "nohup java -Djava.rmi.server.hostname=ec2-" + \
+                           "-".join(state.ip[server].split('.')) + ".compute-1.amazonaws.com Server 15214 &"
+                    child.sendline(call)
+                    child.expect('ubuntu@')
+                    child.sendline('logout')
+                    child.close()
+                    print("Launch java server on " + server + " successfully")
+            
+            time.sleep(10)
+
+            if "ansible" not in state.ip.keys():
+                self.app.stdout.write("Error: Ansible IP unavailable.\n")
+                return
+
+            ssh_call = "ssh -i key ubuntu@" + state.ip["ansible"]
+            child = pexpect.spawn(ssh_call)
+            flag = child.expect(['yes/no', 'ubuntu@'])
+            if flag == 0:
+                child.sendline('yes')
+                child.expect('ubuntu@')
+            call = "nohup java -Djava.rmi.server.hostname=ec2-" + \
+                   "-".join(state.ip["ansible"].split('.')) + ".compute-1.amazonaws.com AnsibleServer 15213"
+
+            for server in ['elk', 'wazuh', 'contractor', 'mail', 'blackhat', 'ftp']:
+                if server not in state.ip.keys():
+                    self.app.stdout.write("Error: " + server + " IP unavailable.\n")
+                    return
+                else:
+                    call += ' ' + state.ip[server]
+            call += ' &'
+            child.sendline(call)
+            child.expect('ubuntu@')
+            child.sendline('logout')
+            child.close()
+            print("Launch java server on ansible successfully")
+
+            ssh_call = "ssh -i key ubuntu@" + state.ip["contractor"]
+            child = pexpect.spawn(ssh_call)
+            flag = child.expect(['yes/no', 'ubuntu@'])
+            if flag == 0:
+                child.sendline('yes')
+                child.expect('ubuntu@')
+            child.sendline("nohup python fetchAndMove.py &")
+            child.expect('ubuntu@')
+            child.sendline('logout')
+            child.close()
+
+        except Exception as err:
+            print err
 
 class Destroy(Command):
     """Destroy the applied environment"""

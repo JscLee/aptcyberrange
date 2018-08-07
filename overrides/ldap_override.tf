@@ -8,7 +8,7 @@ resource "aws_route53_record" "ldap" {
 }
 
 resource "aws_instance" "ldap" {
-  ami = "ami-0a81f86a03b7dcf6d"
+  ami = "ami-0ee80f3baa2c6eb74"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"

@@ -17,6 +17,11 @@
   }],
   "provisioners": [
     {
+      "type": "file",
+      "source": "../scripts/java/",
+      "destination": "/home/ubuntu"
+    },
+    {
       "type": "shell",
       "inline": [
         "sudo apt-add-repository ppa:ansible/ansible -y",
@@ -38,7 +43,8 @@
         "../ansible/install/roles/squirrelmail",
         "../ansible/install/roles/wazuh_agent_mail",
         "../ansible/install/roles/packetbeat",
-        "../ansible/install/roles/metricbeat"
+        "../ansible/install/roles/metricbeat", 
+        "../ansible/install/roles/java"
       ]
     }
   ]
