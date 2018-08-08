@@ -235,19 +235,20 @@ The attack pipeline is as follows:
 After deployment and launch, we should first compile all the java file:
 
 ~~~
-$ javac antlrDemo/*.java
+$ cd antlrDemo
+$ javac *.java
 ~~~
 
 The automation master on defender side can be started by:
 
 ~~~
-$ java antlrDemo/StitchDefender defenderTactics.s defenderStrategies.s
+$ java StitchDefender defenderTactics.s defenderStrategies.s
 ~~~
 
 And the automation master on attacker side can be started by:
 
 ~~~
-$ java antlrDemo/StitchAttacker attackerTactics.s attackerStrategies.s
+$ java StitchAttacker attackerTactics.s attackerStrategies.s
 ~~~
 
 If only the attacker side will be run during the experiment, the content of mailpath.txt on contractor server should be manually modified to
