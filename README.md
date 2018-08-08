@@ -2,7 +2,7 @@
 
 ## Table of contents
 
-1. [Introduction](https://github.com/apt2018/aptcyberrange#1-intruduction-)
+1. [Introduction](https://github.com/apt2018/aptcyberrange#1-introduction-)
 2. [Installation](https://github.com/apt2018/aptcyberrange#2-installation-)   
 3. [Getting started](https://github.com/apt2018/aptcyberrange#3-getting-started-)
 4. [Building machine images](https://github.com/apt2018/aptcyberrange#4-building-machine-images-)      
@@ -22,19 +22,19 @@ The system supports a Domain Specific Language (DSL), Stitch, which is developed
 
 To start using the system, users should input some Stitch scripts. Scripts can be written from two sides, attacker and defender, to do the simulation and experiment. Each side of Stitch scripts should contain one strategy script and one tactic script. The attacker’s tactic script should be named as "attackerTactics.s" and the defender’s tactic script should be named as "defenderTactics.s". Researchers can play roles of attacker and defender concurrently. 
 
-..* Operations provided:
-...You can only use operations that we support in Stitch scripts. Attacker can use the operations including "sendPhishingEmail", "A.downloadLogFile", "A.decodeLogFile", "A.loginWeb", "A.injectShell", "A.crackPasswd", "A.storePasswd", "A.firmware", "A.transaction", "A.deleteLogFile", "A.deleteWebCredential", "F.deleteLogFile".
-...Defender can use the operations including "filterPhisihngEmail", "W.resetPassword", "increaseWebThreshold".
-...You can also add whatever operations you want, just remember to write statements about those operations in tactic’s actions. After using the system’s Antlr visitors, these Stitch statements will be finally directed to execOperations(str) function in Model file. The "str" here is a parameter of String data type, which corresponds to a kind of nodes "MethodCall" in the generated Abstract Syntax Tree (AST). Therefore, specific operations should be implemented or called in this execOperations(str) function.
+⋅⋅* Operations provided:
+⋅⋅⋅You can only use operations that we support in Stitch scripts. Attacker can use the operations including "sendPhishingEmail", "A.downloadLogFile", "A.decodeLogFile", "A.loginWeb", "A.injectShell", "A.crackPasswd", "A.storePasswd", "A.firmware", "A.transaction", "A.deleteLogFile", "A.deleteWebCredential", "F.deleteLogFile".
+⋅⋅⋅Defender can use the operations including "filterPhisihngEmail", "W.resetPassword", "increaseWebThreshold".
+⋅⋅⋅You can also add whatever operations you want, just remember to write statements about those operations in tactic’s actions. After using the system’s Antlr visitors, these Stitch statements will be finally directed to execOperations(str) function in Model file. The "str" here is a parameter of String data type, which corresponds to a kind of nodes "MethodCall" in the generated Abstract Syntax Tree (AST). Therefore, specific operations should be implemented or called in this execOperations(str) function.
 
-..* Boolean conditions provided:
-...Conditions of the system are represented by some Boolean values. Accepted Boolean conditions include "hasWebCredential", "hasLogFile", "hasCardCredential", "webPasswdExpired". Other data types of conditions like "W.time" and "W.threshold" are stored and used to set the Boolean condition. Some files in the system also have values to represent its status. For example, email has a Boolean value "isPhishingEmail" to indicate whether it is a phishing email or not.
-...We did not write most of our conditions as "define Boolean xxx = exists …" like other Stitch examples because of 2 reasons. First, this system is not as complicated as Rainbow and we do not have so many servers to monitor, which means it is unnecessary to write them all in that complex way. Second, we want to update these conditions in real time instead of setting all of them in the beginning of strategy script.
-...Also, you can add other conditions if you want. If they are written in the same way in scripts as our system, their related updated functions should be implemented in the Probe or in execHook(str) function in the Model.
+⋅⋅* Boolean conditions provided:
+⋅⋅⋅Conditions of the system are represented by some Boolean values. Accepted Boolean conditions include "hasWebCredential", "hasLogFile", "hasCardCredential", "webPasswdExpired". Other data types of conditions like "W.time" and "W.threshold" are stored and used to set the Boolean condition. Some files in the system also have values to represent its status. For example, email has a Boolean value "isPhishingEmail" to indicate whether it is a phishing email or not.
+⋅⋅⋅We did not write most of our conditions as "define Boolean xxx = exists …" like other Stitch examples because of 2 reasons. First, this system is not as complicated as Rainbow and we do not have so many servers to monitor, which means it is unnecessary to write them all in that complex way. Second, we want to update these conditions in real time instead of setting all of them in the beginning of strategy script.
+⋅⋅⋅Also, you can add other conditions if you want. If they are written in the same way in scripts as our system, their related updated functions should be implemented in the Probe or in execHook(str) function in the Model.
 
-..* Model description:
-...We have provided an interface of Model and implemented one kind of model named "TargetModel". Our model uses some data structures like HashMap and HashSet to store servers’ IP addresses, tactics visited, hooks, probes, time thresholds, and so on. We also implemented hooks and operations in execHook(str) and execOperations(str).
-...Each system of a specific number of servers should have only 1 related model to store its status and methods. If the system is changed, either category of servers or number of servers has been changed. A new model needs to be implemented. You can add any number of models if you want to change the system into any structure.
+⋅⋅* Model description:
+⋅⋅⋅We have provided an interface of Model and implemented one kind of model named "TargetModel". Our model uses some data structures like HashMap and HashSet to store servers’ IP addresses, tactics visited, hooks, probes, time thresholds, and so on. We also implemented hooks and operations in execHook(str) and execOperations(str).
+⋅⋅⋅Each system of a specific number of servers should have only 1 related model to store its status and methods. If the system is changed, either category of servers or number of servers has been changed. A new model needs to be implemented. You can add any number of models if you want to change the system into any structure.
 
 
 ## 2. Installation [↑](https://github.com/apt2018/aptcyberrange)
@@ -254,7 +254,7 @@ Here is the general picture of the system infrastructure. It may help you unders
 
 ![Infrastructure](https://github.com/apt2018/aptcyberrange/blob/master/doc/img/Infrastructure.png?raw=true)
 
-## 11. Future Work
+## 11. Future Work [↑](https://github.com/apt2018/aptcyberrange)
 
 Quantified Expression not useful in our model, because we do not have a list of servers in our model. Thus we use idExpression only. In the future, in a new model, we might expand the "machines" hashmap into a hashmap<String, List<String>>, and add some functions (like: getList(String typeOfComponent)) to return the list of ideal type to the quantified expression.
 
