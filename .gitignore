@@ -9,3 +9,4 @@ terraform
 packer
 global_state.json
 rootkey.csv
+/antlrDemo/*.class

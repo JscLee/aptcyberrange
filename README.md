@@ -261,7 +261,7 @@ If only the attacker side will be run during the experiment, the content of mail
 
 Here is the general picture of the system infrastructure. It may help you understand how TIAMAT works.
 
-![Infrastructure](https://github.com/apt2018/aptcyberrange/doc/img/Physical_View.png)
+![Infrastructure](https://github.com/apt2018/aptcyberrange/blob/master/doc/img/Physical_View.png)
 
 ## 11. Future Work [↑](https://github.com/apt2018/aptcyberrange)
 
