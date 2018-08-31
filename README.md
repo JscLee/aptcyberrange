@@ -251,10 +251,16 @@ And the automation master on attacker side can be started by:
 $ java StitchAttacker attackerTactics.s attackerStrategies.s
 ~~~
 
-If only the attacker side will be run during the experiment, the content of mailpath.txt on contractor server should be manually modified to
+If only the attacker side will be run during the experiment, the content of mailpath.txt on contractor server should be manually modified to:
 
 ~~~
 /home/ubuntu/mail/new/
+~~~
+
+This path defines where the contractor looks for new mails. The default path (when the defender is running) is:
+
+~~~
+/home/ubuntu/mail/safe/
 ~~~
 
 ## 10. System Infrastructure [↑](https://github.com/apt2018/aptcyberrange)
