@@ -286,3 +286,5 @@ Currently we do not have type checking visitors and enough error handlers - we a
 We do not have an option to properly display debug information on the commandline interface. We do have several (many) sentences indicating what is going on in which function, but we cannot choose whether to display them or not via a "--debug" or "--verbose" option. Currently all the debug informations are stdout outputs, and they are commented out. A logger might be utilized to achieve this.
 
 More data analytics game theory methods and can be used to evaluate the experiments in the future. 
+
+Currently the "filterEmail.py" script on Contractor server hardcodes a probability of 0.5 to filter out an incoming email (all of them are phishing email in the simulation). It is possible to change this script and pass this parameter in if needed.
