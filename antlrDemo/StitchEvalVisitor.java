@@ -110,7 +110,7 @@ public class StitchEvalVisitor extends StitchBaseVisitor<Integer> {
 	}*/
 
 	/*
-	 * only useful for a List of Mail (type) objects
+	 * currently not used and not implemented, used as a space holder and reminder
 	 */
 	@Override
 	public Integer visitQuantifiedExpression(StitchParser.QuantifiedExpressionContext ctx) {
