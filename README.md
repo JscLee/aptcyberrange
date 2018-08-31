@@ -51,7 +51,37 @@ Tiamat does not require compilation which makes installation extremely simple. J
 
 ## 3. Getting started [↑](https://github.com/apt2018/aptcyberrange)
 
-Before using Tiamat, add the path of three jar packages in directory antrlDemo to variable CLASSPATH.
+Before using Tiamat, add the path of three jar packages in directory antrlDemo to variable CLASSPATH:
+
+~~~
+antlr-4.7.1-complete.jar
+jsch-0.1.54.jar
+json-20180130.jar
+~~~
+
+Use commands listed below to simplify future testing (or add them to .bash_profile if using a Mac):
+
+~~~
+export CLASSPATH="/usr/local/lib/jsch-0.1.54.jar:$CLASSPATH"
+export CLASSPATH="/usr/local/lib/antlr-4.7.1-complete.jar:$CLASSPATH"
+export CLASSPATH="/usr/local/lib/json-20180130.jar:$CLASSPATH"
+alias antlr4='java -Xmx500M org.antlr.v4.Tool'
+alias grun='java org.antlr.v4.gui.TestRig'
+~~~
+
+To generate visitors:
+
+~~~
+antlr4 -no-listener -visitor Stitch.g4
+~~~
+
+To generate an Abstract Syntax Tree (AST) for a given Stitch file "testStrategy.txt":
+
+~~~
+grun Stitch script -gui testStrategy.txt
+~~~
+
+Please refer to Google for more instructions on using ANTLR
 
 To start using Tiamat, execute the `tiamat.py` script located in the `tiamat/` directory by running `python tiamat.py`.
 
