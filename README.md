@@ -81,7 +81,7 @@ To generate an Abstract Syntax Tree (AST) for a given Stitch file "testStrategy.
 grun Stitch script -gui testStrategy.txt
 ~~~
 
-Please refer to Google for more instructions on using ANTLR
+Please refer to Google for more instructions on using ANTLR.
 
 To start using Tiamat, execute the `tiamat.py` script located in the `tiamat/` directory by running `python tiamat.py`.
 
