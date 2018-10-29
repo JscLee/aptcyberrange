@@ -76,8 +76,8 @@ class Tiamat(App):
         if sys.platform.startswith('linux'):
             os_platform = "Linux"
             os.chdir("..")
-            subprocess.check_call("sudo chmod -R 777 tiamat", shell=True)
-            os.chdir("tiamat")
+            subprocess.check_call("sudo chmod -R 777 aptcyberrange", shell=True)
+            os.chdir("aptcyberrange")
         elif sys.platform.startswith('darwin'):
             os_platform = "OS X"
         elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
@@ -401,7 +401,7 @@ class Deploy(Command):
             with open('wazuh_override.tf', 'w') as file:
                 file.write(filedata)
 
-            try:
+            try:    
                 subprocess.check_call("terraform plan -detailed-exitcode", shell=True)
             except subprocess.CalledProcessError as e:
                 if e.returncode == 0:
