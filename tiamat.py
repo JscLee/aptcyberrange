@@ -237,7 +237,8 @@ class Tiamat(App):
         try:
             if os_platform != "Windows":
                 print("executing: 'sudo chmod 0600 key'") # Auto_demo
-                subprocess.check_call("sudo chmod 0600 key", shell=True)
+                subprocess.check_call("sudo scp key ~/.ssh/", shell=True)
+                subprocess.check_call("sudo chmod 0600 ~/.ssh/key", shell=True)
         except subprocess.CalledProcessError as e:
             print e
             exit(1)
@@ -459,7 +460,7 @@ class Launch(Command):
         try:
             for server in state.ip.keys():
                 if server != "ansible":
-                    ssh_call = "ssh -i key ubuntu@" + state.ip[server]
+                    ssh_call = "ssh -i ~/.ssh/key ubuntu@" + state.ip[server]
                     child = pexpect.spawn(ssh_call)
                     flag = child.expect(['yes/no', 'ubuntu@'])
                     if flag == 0:
@@ -493,7 +494,7 @@ class Launch(Command):
                 self.app.stdout.write("Error: Ansible IP unavailable.\n")
                 return
 
-            ssh_call = "ssh -i key ubuntu@" + state.ip["ansible"]
+            ssh_call = "ssh -i ~/.ssh/key ubuntu@" + state.ip["ansible"]
             child = pexpect.spawn(ssh_call)
             flag = child.expect(['yes/no', 'ubuntu@'])
             if flag == 0:
@@ -530,7 +531,7 @@ class Launch(Command):
             child.sendline('logout')
             child.close()
 
-            ssh_call = "ssh -i key ubuntu@" + state.ip["contractor"]
+            ssh_call = "ssh -i ~/.ssh/key ubuntu@" + state.ip["contractor"]
             child = pexpect.spawn(ssh_call)
             flag = child.expect(['yes/no', 'ubuntu@'])
             if flag == 0:
@@ -573,7 +574,7 @@ class Ansible(Command):
             self.app.stdout.write("Error: Ansible IP unavailable.\n")
             return
 
-        ssh_call = "ssh -i key ubuntu@" + state.ip["ansible"]
+        ssh_call = "ssh -i ~/.ssh/key ubuntu@" + state.ip["ansible"]
         try:
             subprocess.check_call(ssh_call, shell=True)
         except subprocess.CalledProcessError as err:
@@ -592,7 +593,7 @@ class Auto_demo(Command):
         if "ansible" not in state.ip.keys():
             self.app.stdout.write("Error: Ansible IP unavailable.\n")
             return
-        ssh_call = "ssh -i key ubuntu@" + state.ip["ansible"]
+        ssh_call = "ssh -i ~/.ssh/key ubuntu@" + state.ip["ansible"]
 
         child = pexpect.spawn(ssh_call)
         flag = child.expect(['yes/no', 'ubuntu@ansible:'])
@@ -609,11 +610,11 @@ class Auto_demo(Command):
         print "now try ansible-playbook: tcpdump_on.yml"
         child.sendline('ansible-playbook inject/tcpdump_on.yml')
         child.expect('PLAY RECAP')
-        print "now try ansible-playbook: phishing.yml"
-        child.sendline('ansible-playbook inject/phishing.yml')
+        print "now try ansible-playbook: sendPhishingEmail.yml"
+        child.sendline('ansible-playbook inject/sendPhishingEmail.yml')
         child.expect('PLAY RECAP')
         print "now try to ssh onto blackhat server"
-        child.sendline('ssh -i key ubuntu@blackhat.fazio.com')
+        child.sendline('ssh -i ~/.ssh/key ubuntu@blackhat.fazio.com')
         flag = child.expect(['yes/no', 'ubuntu@blackhat:'])
         if flag == 0:
             print "answering yes"
@@ -649,7 +650,7 @@ class Auto_demo(Command):
         #print "child.after is", child.after
         # child.interact()
         print "now try to ssh onto sales server"
-        child.sendline('ssh -i key ubuntu@sales.fazio.com')
+        child.sendline('ssh -i ~/.ssh/key ubuntu@sales.fazio.com')
         flag = child.expect(['yes/no', 'ubuntu@sales:']) # changed
 
         #print "2nd time"
@@ -675,7 +676,7 @@ class Auto_demo(Command):
         child.sendline('ansible-playbook inject/transactions.yml')
         child.expect('PLAY RECAP')
         print "now try to ssh onto ftp server"
-        child.sendline('ssh -i key ubuntu@ftp.fazio.com')
+        child.sendline('ssh -i ~/.ssh/key ubuntu@ftp.fazio.com')
         flag = child.expect(['yes/no', 'ubuntu@ftp:'])
         if flag == 0:
             print "answering yes"
@@ -747,7 +748,7 @@ class ElkFiles(Command):
         os.makedirs("saved_logs/" + elk_logs_path)
 
         # ssh into elk
-        child = pexpect.spawn('ssh -i key ubuntu@' + state.ip['elk'])
+        child = pexpect.spawn('ssh -i ~/.ssh/key ubuntu@' + state.ip['elk'])
         flag = child.expect(['key fingerprint', 'ubuntu@'])
         if flag == 0:
             child.sendline('yes')
@@ -778,7 +779,7 @@ class ElkFiles(Command):
         child.close()
 
         # ssh into ansible
-        child = pexpect.spawn('ssh -i key ubuntu@' + state.ip['ansible'])
+        child = pexpect.spawn('ssh -i ~/.ssh/key ubuntu@' + state.ip['ansible'])
         flag = child.expect(['key fingerprint', 'ubuntu@'])
         if flag == 0:
             child.sendline('yes')
@@ -791,19 +792,19 @@ class ElkFiles(Command):
         child.close()
 
         # secure copy log data
-        scp_call = "scp -i key -r ubuntu@" + state.ip["ansible"] + ':' + '/home/ubuntu/ansible.log' + ' ' + 'saved_logs/' + elk_logs_path + '/ansible.log'
+        scp_call = "scp -i ~/.ssh/key -r ubuntu@" + state.ip["ansible"] + ':' + '/home/ubuntu/ansible.log' + ' ' + 'saved_logs/' + elk_logs_path + '/ansible.log'
         subprocess.check_call(scp_call, shell=True)
         time.sleep(1)
-        scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/filebeat_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/filebeat_logs.json'
+        scp_call = "scp -i ~/.ssh/key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/filebeat_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/filebeat_logs.json'
         subprocess.check_call(scp_call, shell=True)
         time.sleep(1)
-        scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/packetbeat_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/packetbeat_logs.json'
+        scp_call = "scp -i ~/.ssh/key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/packetbeat_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/packetbeat_logs.json'
         subprocess.check_call(scp_call, shell=True)
         time.sleep(1)
-        scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/metricbeat_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/metricbeat_logs.json'
+        scp_call = "scp -i ~/.ssh/key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/metricbeat_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/metricbeat_logs.json'
         subprocess.check_call(scp_call, shell=True)
         time.sleep(1)
-        scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/wazuh_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/wazuh_logs.json'
+        scp_call = "scp -i ~/.ssh/key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/wazuh_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/wazuh_logs.json'
         subprocess.check_call(scp_call, shell=True)
         time.sleep(1)
 
@@ -820,7 +821,7 @@ class DownloadPcap(Command):
         for server in state.ip:
             if server != 'elk' and server != 'wazuh' and server != 'ansible':
                 print("Copying .pcap from " + server + ': ' + state.ip[server] + "...")
-                scp_call = "scp -i key -r ubuntu@" + state.ip[server] + ':' + '/home/ubuntu/capture.pcap' + ' ' + 'saved_pcaps/' + pcaps_path + '/' + server + '.pcap'
+                scp_call = "scp -i ~/.ssh/key -r ubuntu@" + state.ip[server] + ':' + '/home/ubuntu/capture.pcap' + ' ' + 'saved_pcaps/' + pcaps_path + '/' + server + '.pcap'
                 child = pexpect.spawn(scp_call)
                 flag = child.expect(['key fingerprint', pexpect.EOF])
                 if flag == 0:
