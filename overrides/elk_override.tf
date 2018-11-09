@@ -1,6 +1,5 @@
 resource "aws_instance" "elk" {
-  count = "${var.logging}"
-  ami = "ami-073a35ce51c42ebda"
+  ami = "ami-0fd3d0266dc54c846"
   instance_type = "t2.large"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"

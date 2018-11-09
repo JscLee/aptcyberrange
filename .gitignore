@@ -6,11 +6,10 @@ saved_logs/*
 saved_pcaps/*
 *.zip
 terraform
+.terraform
 packer
 global_state.json
 rootkey.csv
-<<<<<<< HEAD
 antlrDemo/*.class
 antlrDemo/*.tokens
 antlrDemo/*.interp
-

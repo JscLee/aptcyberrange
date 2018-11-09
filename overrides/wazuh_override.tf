@@ -1,6 +1,5 @@
 resource "aws_instance" "wazuh" {
-  count = "${var.logging}"
-  ami = "ami-0a10fd639d4b13f6c"
+  ami = "ami-0fb9ae702d14a274a"
   instance_type = "t2.large"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"
