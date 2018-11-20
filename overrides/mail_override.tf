@@ -17,7 +17,7 @@ resource "aws_route53_record" "mail_MX" {
 }
 
 resource "aws_instance" "mail" {
-  ami = "ami-01d0d0c636d495dcb"
+  ami = "ami-0534bbc9291e66dca"
   instance_type = "t2.small"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"

@@ -13,3 +13,4 @@ rootkey.csv
 antlrDemo/*.class
 antlrDemo/*.tokens
 antlrDemo/*.interp
+.vscode/

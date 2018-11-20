@@ -8,7 +8,7 @@ resource "aws_route53_record" "blackhat" {
 }
 
 resource "aws_instance" "blackhat" {
-  ami = "ami-0a1f765988d04687d"
+  ami = "ami-0f8b6294015c060f5"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"

@@ -8,7 +8,7 @@ resource "aws_route53_record" "contractor" {
 }
 
 resource "aws_instance" "contractor" {
-  ami = "ami-0afabac1c2ce51ecb"
+  ami = "ami-08014a3e667399526"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"
