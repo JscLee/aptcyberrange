@@ -15,7 +15,7 @@ class NormalPOS:
 
     def __init__(self):
         # Open database connection
-        host = "10.0.0.20"  # private ip address of payment server: 10.0.0.20
+        host = "172.31.83.88"  # private ip address of payment server: 172.31.83.88
         user = "root"
         passwd = "root"
         db_name = "payment_db"
@@ -32,7 +32,7 @@ class NormalPOS:
     def run(self):
         print "normal POS firmware running..."
 
-        with open("/home/ubuntu/payment-server/pos_firmware.py", "r") as firmware:
+        with open("c:\\APT\\update\\pos_firmware.py", "r") as firmware:
             m = hashlib.md5(firmware.read())
             old_checksum = m.digest()
 
@@ -45,7 +45,7 @@ class NormalPOS:
         while True:
 
             skip = 0
-            with open("/home/ubuntu/payment-server/pos_firmware.py", "r") as firmware:
+            with open("c:\\APT\\update\\pos_firmware.py", "r") as firmware:
                 m = hashlib.md5(firmware.read())
                 new_checksum = m.digest()
 

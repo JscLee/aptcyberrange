@@ -14,20 +14,20 @@ import paramiko
 
 class PaymentServer:
     def __init__(self):
-        self.pos_ip = "10.0.0.21"
+        self.pos_ip = "172.31.92.206"
         self.pos_nc_port = "5555"
         self.nc_port = "6666"  # nc listening port of payment server
 
     def check_firmware(self):
         print "firmware check is running..."
 
-        with open("/home/ubuntu/payment-server/pos_firmware.py", "r") as firmware:
+        with open(".\pos_firmware.py", "r") as firmware:
             m = hashlib.md5(firmware.read())
             old_checksum = m.digest()
 
         while True:
             #print "new check"
-            with open("/home/ubuntu/payment-server/pos_firmware.py", "r") as firmware:
+            with open(".\pos_firmware.py", "r") as firmware:
                 m = hashlib.md5(firmware.read())
                 new_checksum = m.digest()
 
@@ -46,7 +46,7 @@ class PaymentServer:
 
     def restart_firmware(self):
         print "transferring firmware"
-        update_call = "sudo /home/ubuntu/payment-server/restart_firmware.sh"
+        update_call = ".\restart_firmware.bat"
         try:
             subprocess.check_call(update_call, shell=True)
         except subprocess.CalledProcessError as e:
